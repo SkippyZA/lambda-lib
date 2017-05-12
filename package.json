@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1-dev",
+  "name": "lambda-lib",
+  "description": "Decorators and tools for AWS Lambda",
+  "keywords": [
+    "lambda",
+    "aws",
+    "promise",
+    "decorator"
+  ],
+  "author": "Steven Inskip",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SkippyZA/lambda-lib.git"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "lint": "standard -v \"src/**/*.js\"",
+    "lint:fix": "npm run lint -- --fix",
+    "prepublish": "npm run compile",
+    "test": "npm run lint && npm run compile && npm run test:unit",
+    "test:unit": "NODE_ENV=test mocha --compilers js:babel-core/register --recursive --reporter spec --check-leaks tests"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0",
+    "standard": "^10.0.2"
+  }
+}
