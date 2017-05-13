@@ -21,11 +21,12 @@
     "lint:fix": "npm run lint -- --fix",
     "prepublish": "npm run compile",
     "test": "npm run lint && npm run compile && npm run test:unit",
-    "test:unit": "NODE_ENV=test mocha --compilers js:babel-core/register --recursive --reporter spec --check-leaks tests"
+    "test:unit": "NODE_ENV=test mocha -r babel-register --recursive --reporter spec --check-leaks tests"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^3.5.0",
