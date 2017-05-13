@@ -107,13 +107,13 @@ function ApiGateway (options) {
           DEBUG && console.error('decorator.api-gateway: we gotz a booboo')
           DEBUG && console.error(err)
 
-          if (!err.statusCode) {
-            DEBUG && console.error(`unknown error: ${err.message}`)
-            return callback(err)
-          }
+          // if (!err.statusCode) {
+          //   DEBUG && console.error(`unknown error: ${err.message}`)
+          //   return callback(err)
+          // }
 
           return callback(null, {
-            statusCode: err.statusCode,
+            statusCode: err.statusCode || 500,
             headers: responseObject.headers,
             body: JSON.stringify({
               error: {

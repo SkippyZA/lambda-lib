@@ -1,9 +1,10 @@
-import { should } from 'chai'
+import { should, expect } from 'chai'
 import { ApiGateway } from '../src/index.js'
 
 describe('api-gateway decorator', () => {
   before(() => {
     should()
+    expect()
   })
 
   describe('when applied to a class method', () => {
@@ -32,6 +33,25 @@ describe('api-gateway decorator', () => {
         res.headers.should.eql({})
         const body = JSON.parse(res.body)
         body.should.equal('test string')
+
+        done()
+      })
+    })
+
+    it('should return a status code of 500 for an unknown exception', (done) => {
+      class Test {
+        @ApiGateway()
+        testMethod(event) {
+          throw new Error('Test')
+        }
+      }
+
+      const test = new Test()
+
+      test.testMethod({ test: 'test string' }, null, (err, res) => {
+        expect(err).to.be.null
+
+        res.statusCode.should.equal(500)
 
         done()
       })

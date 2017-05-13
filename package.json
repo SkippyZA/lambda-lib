@@ -21,7 +21,9 @@
     "lint:fix": "npm run lint -- --fix",
     "prepublish": "npm run compile",
     "test": "npm run lint && npm run compile && npm run test:unit",
-    "test:unit": "NODE_ENV=test mocha -r babel-register --recursive --reporter spec --check-leaks tests"
+    "test:unit": "NODE_ENV=test mocha -r babel-register --recursive --reporter spec tests",
+    "test:unit:watch": "npm run watch --silent -- `which npm` run test:unit --silent",
+    "watch": "nodemon -e js -w src -w tests "
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -31,6 +33,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^3.5.0",
     "mocha": "^3.3.0",
+    "nodemon": "^1.11.0",
     "standard": "^10.0.2"
   }
 }
