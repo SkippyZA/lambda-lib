@@ -1,5 +1,5 @@
 /**
- * Map the body to json if it able to be.
+ * Stringify the response body
  */
 export default () => (req, res) => {
   res.body = JSON.stringify(res.body)
