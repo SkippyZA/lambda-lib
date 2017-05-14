@@ -13,45 +13,11 @@ function ApiGateway (options) {
   const DEBUG = options.debug || false
 
   /**
-   * Add cors headers to event
-   */
-  const corsHandler = (req, res) => {
-    if (cors) {
-      const corsHeaders = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Methods': 'POST, GET, PUT, PATCH, DELETE, OPTIONS'
-      }
-
-      res.headers = {
-        ...corsHeaders,
-        ...res.headers
-      }
-
-      DEBUG && console.log('We have cors!', JSON.stringify(res.headers, '', 2))
-    }
-  }
-
-  /**
-   * Map the body to json if it able to be.
-   */
-  const safeJsonBody = (req, res) => {
-    res.body = JSON.stringify(res.body)
-  }
-
-  /**
-   * Apply the status code supplied if the fn response is successful.
-   */
-  const statusCodeHandler = (req, res) => {
-    res.statusCode = statusCode || res.statusCode
-  }
-
-  /**
    * Collection of middleware to be executed `before` and `after` the execution of the middleware function.
    */
   const middlewareStack = {
-    before: [ corsHandler ],
-    after: [ safeJsonBody, statusCodeHandler ]
+    before: [],
+    after: []
   }
 
   /**
