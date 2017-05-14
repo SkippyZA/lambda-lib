@@ -1,7 +1,7 @@
 import { should, expect } from 'chai'
 import { ApiGateway } from '../src/index.js'
 
-describe.skip('api-gateway decorator', () => {
+describe('api-gateway decorator', () => {
   before(() => {
     should()
     expect()
@@ -31,8 +31,7 @@ describe.skip('api-gateway decorator', () => {
 
         res.statusCode.should.equal(200)
         res.headers.should.eql({})
-        const body = JSON.parse(res.body)
-        body.should.equal('test string')
+        res.body.should.equal('test string')
 
         done()
       })
@@ -50,13 +49,10 @@ describe.skip('api-gateway decorator', () => {
 
       test.testMethod({ test: 'test string' }, null, (err, res) => {
         expect(err).to.be.null
-
         res.statusCode.should.equal(500)
 
         done()
       })
     })
-
-    it('should expose the default signature (event, context, callback)')
   })
 })

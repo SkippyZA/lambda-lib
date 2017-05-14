@@ -9,7 +9,6 @@ import safeJson from './safe-json'
  */
 function ApiGateway (options) {
   options = options || {}
-  const { statusCode, cors } = options
   const DEBUG = options.debug || false
 
   /**
@@ -72,11 +71,6 @@ function ApiGateway (options) {
         .catch(err => {
           DEBUG && console.error('decorator.api-gateway: we gotz a booboo')
           DEBUG && console.error(err)
-
-          // if (!err.statusCode) {
-          //   DEBUG && console.error(`unknown error: ${err.message}`)
-          //   return callback(err)
-          // }
 
           return callback(null, {
             statusCode: err.statusCode || 500,
