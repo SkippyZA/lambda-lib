@@ -1,4 +1,7 @@
 import safeJson from './safe-json'
+import cors from './middleware/cors'
+import stringifyBody from './middleware/stringify-body'
+import statusCode from './middleware/status-code'
 
 /**
  * ApiGateway decorator of awesomeness!
@@ -15,8 +18,22 @@ function ApiGateway (options) {
    * Collection of middleware to be executed `before` and `after` the execution of the middleware function.
    */
   const middlewareStack = {
-    before: [],
-    after: []
+    before: [
+      {
+        key: 'cors',
+        fn: cors
+      }
+    ],
+    after: [
+      {
+        key: 'stringifyBody',
+        fn: stringifyBody
+      },
+      {
+        key: 'statusCode',
+        fn: statusCode
+      }
+    ]
   }
 
   /**
@@ -43,7 +60,10 @@ function ApiGateway (options) {
       const responseObject = { statusCode: 200, headers: {}, body: '' }
 
       // Execute the middleware stack using the above request and response
-      const processMiddlewareStack = stack => stack.forEach(middlewareFn => middlewareFn(requestEvent, responseObject))
+      const processMiddlewareStack = stack => stack.forEach(middleware => {
+        const params = options[middleware.key] || null
+        middleware.fn(params)(requestEvent, responseObject)
+      })
 
       // Start the whole promise chain off using the requestEvent
       Promise.resolve(requestEvent)
