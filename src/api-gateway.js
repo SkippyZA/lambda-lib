@@ -1,4 +1,5 @@
 import safeJson from './safe-json'
+import defaultLogger from './logger'
 import cors from './middleware/cors'
 import stringifyBody from './middleware/stringify-body'
 import statusCode from './middleware/status-code'
@@ -13,6 +14,7 @@ import statusCode from './middleware/status-code'
 function ApiGateway (options) {
   options = options || {}
   const DEBUG = options.debug || false
+  const logger = options.logger || defaultLogger
 
   /**
    * Collection of middleware to be executed `before` and `after` the execution of the middleware function.
@@ -50,8 +52,8 @@ function ApiGateway (options) {
      * Lambda handler code
      */
     descriptor.value = (event, context, callback) => {
-      DEBUG && console.log('decorator.api-gateway: start')
-      DEBUG && console.log(JSON.stringify(event, '', 2))
+      DEBUG && logger.debug('decorator.api-gateway: start')
+      DEBUG && logger.debug(JSON.stringify(event, '', 2))
 
       // Clone event object
       const requestEvent = JSON.parse(JSON.stringify(event))
@@ -82,15 +84,14 @@ function ApiGateway (options) {
         })
         // Build up lambda response callback
         .then(res => {
-          DEBUG && console.log('decorator.api-gateway: received result')
-          DEBUG && console.log('decorator.api-gateway: response:', res)
+          DEBUG && logger.debug('decorator.api-gateway: received result')
+          DEBUG && logger.debug('decorator.api-gateway: response:', res)
 
           return callback(null, res)
         })
         // Build up an error response for lambda. Apply statusCode if available, else 500 and log the error
         .catch(err => {
-          DEBUG && console.error('decorator.api-gateway: we gotz a booboo')
-          DEBUG && console.error(err)
+          logger.error(`decorator.api-gateway: error occured. (${err.message})`)
 
           return callback(null, {
             statusCode: err.statusCode || 500,
