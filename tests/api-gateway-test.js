@@ -8,10 +8,6 @@ describe('api-gateway decorator', () => {
   })
 
   describe('when applied to a class method', () => {
-    beforeEach(() => {
-
-    })
-
     it('should work with no parameters', (done) => {
       class Test {
         @ApiGateway()
@@ -31,7 +27,7 @@ describe('api-gateway decorator', () => {
 
         res.statusCode.should.equal(200)
         res.headers.should.eql({})
-        res.body.should.equal('test string')
+        res.body.should.equal('"test string"')
 
         done()
       })
