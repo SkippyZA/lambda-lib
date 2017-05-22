@@ -1,5 +1,5 @@
-import safeJson from './safe-json'
-import defaultLogger from './logger'
+import safeJson from './utils/safe-json'
+import defaultLogger from './utils/logger'
 import cors from './middleware/cors'
 import stringifyBody from './middleware/stringify-body'
 import statusCode from './middleware/status-code'
