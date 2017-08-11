@@ -51,7 +51,7 @@ function ApiGateway (options) {
     /**
      * Lambda handler code
      */
-    descriptor.value = (event, context, callback) => {
+    descriptor.value = function (event, context, callback) {
       DEBUG && logger.debug('decorator.api-gateway: start')
       DEBUG && logger.debug(JSON.stringify(event, '', 2))
 
@@ -75,7 +75,7 @@ function ApiGateway (options) {
           return e
         })
         // Execute handler
-        .then(e => fn(e, context))
+        .then(e => fn.apply(this, e))
         // Run `after` middleware
         .then(r => {
           responseObject.body = r
