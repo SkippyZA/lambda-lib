@@ -13,8 +13,7 @@ import statusCode from './middleware/status-code'
  */
 function ApiGateway (options) {
   options = options || {}
-  const DEBUG = options.debug || false
-  const logger = options.logger || defaultLogger
+  const logger = options.logger || defaultLogger(options.logLevel || 'none')
 
   /**
    * Collection of middleware to be executed `before` and `after` the execution of the middleware function.
@@ -52,8 +51,8 @@ function ApiGateway (options) {
      * Lambda handler code
      */
     descriptor.value = function (event, context, callback) {
-      DEBUG && logger.debug('decorator.api-gateway: start')
-      DEBUG && logger.debug(JSON.stringify(event, '', 2))
+      logger.debug('decorator.api-gateway: start')
+      logger.debug(JSON.stringify(event, '', 2))
 
       // Clone event object
       const requestEvent = JSON.parse(JSON.stringify(event))
@@ -75,7 +74,7 @@ function ApiGateway (options) {
           return e
         })
         // Execute handler
-        .then(e => fn.apply(this, e))
+        .then(e => fn.apply(this, [e]))
         // Run `after` middleware
         .then(r => {
           responseObject.body = r
@@ -84,8 +83,8 @@ function ApiGateway (options) {
         })
         // Build up lambda response callback
         .then(res => {
-          DEBUG && logger.debug('decorator.api-gateway: received result')
-          DEBUG && logger.debug('decorator.api-gateway: response:', res)
+          logger.debug('decorator.api-gateway: received result')
+          logger.debug('decorator.api-gateway: response:', res)
 
           return callback(null, res)
         })

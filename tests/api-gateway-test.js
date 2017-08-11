@@ -1,14 +1,6 @@
 import { should, expect } from 'chai'
 import { ApiGateway } from '../src/index.js'
 
-const noop = () => {}
-const logger = {
-  debug: noop,
-  info: noop,
-  warn: noop,
-  error: noop
-}
-
 describe('api-gateway decorator', () => {
   before(() => {
     should()
