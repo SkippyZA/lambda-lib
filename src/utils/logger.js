@@ -8,12 +8,7 @@ export default (logLevel) => {
     none: 100
   }
 
-  const expectedWeight = Object.keys(levels).find(x => x === logLevel.toLowerCase())
-
-  const canPrint = lvl => {
-    const levelWeight = Object.keys(levels).find(x => x === lvl.toLowerCase())
-    return levelWeight >= expectedWeight
-  }
+  const canPrint = lvl => levels[lvl] >= levels[logLevel]
 
   return {
     trace: x => canPrint('trace') && console.trace(x),
