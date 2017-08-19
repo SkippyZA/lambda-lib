@@ -33,7 +33,11 @@ describe('api-gateway decorator', () => {
       })
     })
 
-    it('should return a status code of 500 for an unknown exception', (done) => {
+    it('should add cors headers', (done) => {
+
+    })
+
+    it.skip('should return a status code of 500 for an unknown exception', (done) => {
       class Test {
         @ApiGateway()
         testMethod(event) {

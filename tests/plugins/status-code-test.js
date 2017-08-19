@@ -1,5 +1,5 @@
 import { should } from 'chai'
-import statusCodeMiddleware from '../../src/middleware/status-code'
+import statusCodeMiddleware from '../../src/plugins/status-code'
 
 describe('status-code middleware', () => {
   before(() => {
