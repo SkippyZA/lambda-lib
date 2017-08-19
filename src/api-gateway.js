@@ -1,8 +1,12 @@
+import ApiGatewayPlugin from './api-gateway-plugin'
+
 import safeJson from './utils/safe-json'
 import defaultLogger from './utils/logger'
-import cors from './middleware/cors'
-import stringifyBody from './middleware/stringify-body'
-import statusCode from './middleware/status-code'
+import CorsPlugin from './plugins/cors'
+import StatusCodePlugin from './plugins/status-code'
+import StringifyBodyPlugin from './plugins/stringify-body'
+
+let registeredPlugins = []
 
 /**
  * ApiGateway decorator of awesomeness!
@@ -14,28 +18,6 @@ import statusCode from './middleware/status-code'
 function ApiGateway (options) {
   options = options || {}
   const logger = options.logger || defaultLogger(options.logLevel || 'none')
-
-  /**
-   * Collection of middleware to be executed `before` and `after` the execution of the middleware function.
-   */
-  const middlewareStack = {
-    before: [
-      {
-        key: 'cors',
-        fn: cors
-      }
-    ],
-    after: [
-      {
-        key: 'stringifyBody',
-        fn: stringifyBody
-      },
-      {
-        key: 'statusCode',
-        fn: statusCode
-      }
-    ]
-  }
 
   /**
    * Decorator code.
@@ -52,25 +34,30 @@ function ApiGateway (options) {
      */
     descriptor.value = function (event, context, callback) {
       logger.debug('decorator.api-gateway: start')
-      logger.debug(JSON.stringify(event, '', 2))
 
       // Clone event object
       const requestEvent = JSON.parse(JSON.stringify(event))
       requestEvent.body = safeJson(requestEvent.body)
+
       // Blank response object
       const responseObject = { statusCode: 200, headers: {}, body: '' }
 
       // Execute the middleware stack using the above request and response
-      const processMiddlewareStack = stack => stack.forEach(middleware => {
-        const params = options[middleware.key] || null
-        middleware.fn(params)(requestEvent, responseObject)
-      })
+      const processPluginsForHook = hook => registeredPlugins
+        .forEach(plugin => {
+          const pluginsForHook = plugin.hooks[hook] || {}
+
+          Object.getOwnPropertyNames(pluginsForHook)
+            .forEach(pluginName => {
+              pluginsForHook[pluginName](options[pluginName] || null)(requestEvent, responseObject)
+            })
+        })
 
       // Start the whole promise chain off using the requestEvent
       Promise.resolve(requestEvent)
         // Run `before` middleware
         .then(e => {
-          processMiddlewareStack(middlewareStack.before)
+          processPluginsForHook(ApiGatewayPlugin.Hook.PRE_EXECUTE)
           return e
         })
         // Execute handler
@@ -78,7 +65,7 @@ function ApiGateway (options) {
         // Run `after` middleware
         .then(r => {
           responseObject.body = r
-          processMiddlewareStack(middlewareStack.after)
+          processPluginsForHook(ApiGatewayPlugin.Hook.POST_EXECUTE)
           return responseObject
         })
         // Build up lambda response callback
@@ -91,7 +78,6 @@ function ApiGateway (options) {
         // Build up an error response for lambda. Apply statusCode if available, else 500 and log the error
         .catch(err => {
           logger.error(`decorator.api-gateway: error occured. (${err.message})`)
-
           return callback(null, {
             statusCode: err.statusCode || 500,
             headers: responseObject.headers,
@@ -109,5 +95,14 @@ function ApiGateway (options) {
     return descriptor
   }
 }
+
+ApiGateway.registerPlugin = function (plugin) {
+  registeredPlugins.push(plugin)
+}
+
+// Register default plugins
+ApiGateway.registerPlugin(new CorsPlugin())
+ApiGateway.registerPlugin(new StatusCodePlugin())
+ApiGateway.registerPlugin(new StringifyBodyPlugin())
 
 export default ApiGateway
