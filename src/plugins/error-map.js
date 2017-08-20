@@ -12,6 +12,14 @@ export default class ErrorMapPlugin extends ApiGatewayPlugin {
    */
   errorMapper (errorMap) {
     return (req, res, error) => {
+      res.statusCode = 500
+      res.body = JSON.stringify({
+        error: {
+          message: error.message,
+          ...(error || {}),
+          _stackTrace: error.stack.split('\n').map(x => x.trim())
+        }
+      })
     }
   }
 }

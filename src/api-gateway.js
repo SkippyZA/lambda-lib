@@ -2,9 +2,11 @@ import ApiGatewayPlugin from './api-gateway-plugin'
 
 import safeJson from './utils/safe-json'
 import defaultLogger from './utils/logger'
+
 import CorsPlugin from './plugins/cors'
 import StatusCodePlugin from './plugins/status-code'
 import StringifyBodyPlugin from './plugins/stringify-body'
+import ErrorMapPlugin from './plugins/error-map'
 
 let registeredPlugins = []
 
@@ -43,13 +45,13 @@ function ApiGateway (options) {
       const responseObject = { statusCode: 200, headers: {}, body: '' }
 
       // Execute the middleware stack using the above request and response
-      const processPluginsForHook = hook => registeredPlugins
+      const processPluginsForHook = (hook, error) => registeredPlugins
         .forEach(plugin => {
           const pluginsForHook = plugin.hooks[hook] || {}
 
           Object.getOwnPropertyNames(pluginsForHook)
             .forEach(pluginName => {
-              pluginsForHook[pluginName](options[pluginName] || null)(requestEvent, responseObject)
+              pluginsForHook[pluginName](options[pluginName] || null)(requestEvent, responseObject, error)
             })
         })
 
@@ -66,29 +68,16 @@ function ApiGateway (options) {
         .then(r => {
           responseObject.body = r
           processPluginsForHook(ApiGatewayPlugin.Hook.POST_EXECUTE)
-          return responseObject
         })
-        // Build up lambda response callback
-        .then(res => {
-          logger.debug('decorator.api-gateway: received result')
-          logger.debug('decorator.api-gateway: response:', res)
-
-          return callback(null, res)
-        })
-        // Build up an error response for lambda. Apply statusCode if available, else 500 and log the error
         .catch(err => {
           logger.error(`decorator.api-gateway: error occured. (${err.message})`)
-          return callback(null, {
-            statusCode: err.statusCode || 500,
-            headers: responseObject.headers,
-            body: JSON.stringify({
-              error: {
-                message: err.message,
-                ...(err || {}),
-                _stackTrace: err.stack.split('\n').map(x => x.trim())
-              }
-            })
-          })
+          processPluginsForHook(ApiGatewayPlugin.Hook.ON_ERROR, err)
+        })
+        // Build up lambda response callback
+        .then(() => {
+          logger.debug('decorator.api-gateway: response:', responseObject)
+
+          return callback(null, responseObject)
         })
     }
 
@@ -104,5 +93,6 @@ ApiGateway.registerPlugin = function (plugin) {
 ApiGateway.registerPlugin(new CorsPlugin())
 ApiGateway.registerPlugin(new StatusCodePlugin())
 ApiGateway.registerPlugin(new StringifyBodyPlugin())
+ApiGateway.registerPlugin(new ErrorMapPlugin())
 
 export default ApiGateway
