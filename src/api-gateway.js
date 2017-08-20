@@ -12,10 +12,6 @@ let registeredPlugins = []
 
 /**
  * ApiGateway decorator of awesomeness!
- *
- * statusCode: Default status code to use for a successful response
- * bodySchema: json schema to validate the request body against
- * cors: if set to true, use default global CORS access
  */
 function ApiGateway (options) {
   options = options || {}
@@ -94,5 +90,9 @@ ApiGateway.registerPlugin(new CorsPlugin())
 ApiGateway.registerPlugin(new StatusCodePlugin())
 ApiGateway.registerPlugin(new StringifyBodyPlugin())
 ApiGateway.registerPlugin(new ErrorMapPlugin())
+
+// do a pre -> post/error timing event. metric it by class + function name?
+// ApiGateway.registerPlugin(new ExecutionDurationMetrics())
+// ApiGateway.registerPlugin(new ValidateBody())
 
 export default ApiGateway

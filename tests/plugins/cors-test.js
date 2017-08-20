@@ -1,5 +1,4 @@
 import { should } from 'chai'
-import stringifyBodyMiddleware from '../../src/plugins/stringify-body'
 
 describe('cors middleware', () => {
   before(() => {
