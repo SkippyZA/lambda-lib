@@ -11,8 +11,13 @@ export default class ErrorMapPlugin extends ApiGatewayPlugin {
    * Map errors to custom status codes
    */
   errorMapper (errorMap) {
+    errorMap = errorMap || {}
+
     return (req, res, error) => {
-      res.statusCode = 500
+      const errorFromMap = Object.getOwnPropertyNames(errorMap)
+        .find(prop => error.constructor.name === prop)
+
+      res.statusCode = errorMap[errorFromMap] || 500
       res.body = JSON.stringify({
         error: {
           message: error.message,
