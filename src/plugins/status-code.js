@@ -1,6 +1,6 @@
 import ApiGatewayPlugin from '../api-gateway-plugin'
 
-export default class StatusCodePlugin extends ApiGatewayPlugin {
+export default class StatusCode extends ApiGatewayPlugin {
   constructor () {
     super('statusCode')
 

@@ -1,6 +1,6 @@
 import ApiGatewayPlugin from '../api-gateway-plugin'
 
-export default class StringifyBodyPlugin extends ApiGatewayPlugin {
+export default class StringifyBody extends ApiGatewayPlugin {
   constructor () {
     super('stringifyBody')
 

@@ -1,6 +1,6 @@
 import ApiGatewayPlugin from '../api-gateway-plugin'
 
-export default class CorsPlugin extends ApiGatewayPlugin {
+export default class Cors extends ApiGatewayPlugin {
   constructor () {
     super('cors')
 

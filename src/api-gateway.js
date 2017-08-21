@@ -6,7 +6,8 @@ import defaultLogger from './utils/logger'
 import CorsPlugin from './plugins/cors'
 import StatusCodePlugin from './plugins/status-code'
 import StringifyBodyPlugin from './plugins/stringify-body'
-import ErrorMapPlugin from './plugins/error-map'
+import ErrorStatusCodeMap from './plugins/error-status-code-map'
+import ErrorResponsePlugin from './plugins/error-response'
 
 let registeredPlugins = []
 
@@ -89,10 +90,7 @@ ApiGateway.registerPlugin = function (plugin) {
 ApiGateway.registerPlugin(new CorsPlugin())
 ApiGateway.registerPlugin(new StatusCodePlugin())
 ApiGateway.registerPlugin(new StringifyBodyPlugin())
-ApiGateway.registerPlugin(new ErrorMapPlugin())
-
-// do a pre -> post/error timing event. metric it by class + function name?
-// ApiGateway.registerPlugin(new ExecutionDurationMetrics())
-// ApiGateway.registerPlugin(new ValidateBody())
+ApiGateway.registerPlugin(new ErrorStatusCodeMap())
+ApiGateway.registerPlugin(new ErrorResponsePlugin())
 
 export default ApiGateway

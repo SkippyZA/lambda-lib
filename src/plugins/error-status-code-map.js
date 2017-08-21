@@ -1,6 +1,6 @@
 import ApiGatewayPlugin from '../api-gateway-plugin'
 
-export default class ErrorMapPlugin extends ApiGatewayPlugin {
+export default class ErrorStatusCodeMap extends ApiGatewayPlugin {
   constructor () {
     super('errorMap')
 
@@ -18,13 +18,6 @@ export default class ErrorMapPlugin extends ApiGatewayPlugin {
         .find(prop => error.constructor.name === prop)
 
       res.statusCode = errorMap[errorFromMap] || 500
-      res.body = JSON.stringify({
-        error: {
-          message: error.message,
-          ...(error || {}),
-          _stackTrace: error.stack.split('\n').map(x => x.trim())
-        }
-      })
     }
   }
 }
