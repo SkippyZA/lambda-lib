@@ -7,7 +7,6 @@ import CorsPlugin from './plugins/cors'
 import StatusCodePlugin from './plugins/status-code'
 import StringifyBodyPlugin from './plugins/stringify-body'
 import ErrorStatusCodeMap from './plugins/error-status-code-map'
-import ErrorResponsePlugin from './plugins/error-response'
 
 let registeredPlugins = []
 
@@ -68,6 +67,15 @@ function ApiGateway (options) {
         })
         .catch(err => {
           logger.error(`decorator.api-gateway: error occured. (${err.message})`)
+
+          responseObject.body = JSON.stringify({
+            error: {
+              message: err.message,
+              ...(err || {}),
+              _stackTrace: err.stack.split('\n').map(x => x.trim())
+            }
+          })
+
           processPluginsForHook(ApiGatewayPlugin.Hook.ON_ERROR, err)
         })
         // Build up lambda response callback
@@ -91,6 +99,5 @@ ApiGateway.registerPlugin(new CorsPlugin())
 ApiGateway.registerPlugin(new StatusCodePlugin())
 ApiGateway.registerPlugin(new StringifyBodyPlugin())
 ApiGateway.registerPlugin(new ErrorStatusCodeMap())
-ApiGateway.registerPlugin(new ErrorResponsePlugin())
 
 export default ApiGateway
