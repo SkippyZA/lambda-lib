@@ -8,9 +8,102 @@ and eliminate boilerplate code
 ## Example
 
 ```javascript
-@ApiGateway({ statusCode: 200, cors: true, errorMap: { ReferenceError: 404, Error: 401 } })
-helloHandler (event) {
-  return Promise.resolve({ hello: world })
+import { LambdaHandler, ApiGateway } from 'lambda-lib'
+
+@LambdaHandler
+class SampleLambdaHandler {
+  @ApiGateway({ statusCode: 200, cors: true })
+  helloHandler (event) {
+    return Promise.resolve({ hello: world })
+  }
+
+  @ApiGateway({ statusCode: 200, errorMap: { ReferenceError: 400, Error: 404 } })
+  failedHandler (event) {
+    return Promise.reject(new Error('Sample error'))
+  }
+}
+
+const handler = new SampleLambdaHandler()
+
+export default handler.lambdaHandlers()
+```
+
+### Sample Response
+
+#### HelloHandler Response
+
+```bash
+HTTP/1.1 200 OK
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE, OPTIONS
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Type: application/json
+Date: Tue, 29 Aug 2017 17:07:04 GMT
+accept-ranges: bytes
+cache-control: no-cache
+content-length: 39
+vary: origin,accept-encoding
+
+{
+  "hello": "world"
+}
+```
+
+
+#### FailedHandler Response
+
+```bash
+HTTP/1.1 400 Bad Request
+Connection: keep-alive
+Content-Type: application/json
+Date: Tue, 29 Aug 2017 17:08:00 GMT
+cache-control: no-cache
+content-length: 398
+vary: accept-encoding
+
+{
+  "error": {
+    "_stackTrace": [
+      "ReferenceError: I am a reference error",
+      "at SampleLambdaHandler.failedHandler (/.../src/resources/example/index.js:223:15)",
+      "at /.../node_modules/lambda-lib/lib/api-gateway.js:93:19",
+      "at process._tickDomainCallback (internal/process/next_tick.js:135:7)"
+    ],
+    "message": "I am a reference error"
+  }
+}
+```
+
+## Specifying a custom error response
+
+```javascript
+
+// Registering a custom error response plugin. This is applied
+// globally.
+ApiGateway.registerPlugin(new ErrorResponsePlugin(err => {
+  return {
+    test: 'This is the error response body for all errors',
+    error: err.message
+  }
+}))
+```
+
+#### Sample response with custom error
+
+```bash
+HTTP/1.1 400 Bad Request
+Connection: keep-alive
+Content-Type: application/json
+Date: Tue, 29 Aug 2017 17:08:00 GMT
+cache-control: no-cache
+content-length: 398
+vary: accept-encoding
+
+{
+  "test": "This is the error response body for all errors",
+  "error": "I am a reference error"
+  }
 }
 ```
 
@@ -30,4 +123,5 @@ helloHandler (event) {
 | PRE_EXECUTE      | The pre execute hook is run right before the execution of handler code. |
 | POST_EXECUTE     | This hook, post execute, is run after the execution of the handler code. |
 | ON_ERROR         | When ever there is an error which results in a rejected promise, this hook is executed. |
+| FINALLY          | Final hook executed after the response has been sent to the client already. (Unable to manipulate response contents here) |
 
