@@ -79,8 +79,7 @@ vary: accept-encoding
 
 ```javascript
 
-// Registering a custom error response plugin. This is applied
-// globally.
+// Registering a custom error response plugin. This is applied globally.
 ApiGateway.registerPlugin(new ErrorResponsePlugin(err => {
   return {
     test: 'This is the error response body for all errors',
@@ -125,3 +124,6 @@ vary: accept-encoding
 | ON_ERROR         | When ever there is an error which results in a rejected promise, this hook is executed. |
 | FINALLY          | Final hook executed after the response has been sent to the client already. (Unable to manipulate response contents here) |
 
+## Writing your own plugin
+
+See [built-in plugins](./src/plugins) for samples
