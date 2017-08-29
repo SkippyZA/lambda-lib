@@ -82,7 +82,11 @@ function ApiGateway (options) {
         .then(() => {
           logger.debug('decorator.api-gateway: response:', responseObject)
 
-          return callback(null, responseObject)
+          callback(null, responseObject)
+        })
+        .then(() => {
+          // Run the 'FINALLY' plugins
+          processPluginsForHook(ApiGatewayPlugin.Hook.FINALLY)
         })
     }
 
