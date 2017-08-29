@@ -19,7 +19,7 @@ class SampleLambdaHandler {
 
   @ApiGateway({ statusCode: 200, errorMap: { ReferenceError: 400, Error: 404 } })
   failedHandler (event) {
-    return Promise.reject(new Error('Sample error'))
+    return Promise.reject(new ReferenceError('I am a reference error'))
   }
 }
 
