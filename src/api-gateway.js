@@ -47,7 +47,7 @@ function ApiGateway (options) {
 
           Object.getOwnPropertyNames(pluginsForHook)
             .forEach(pluginName => {
-              pluginsForHook[pluginName](options[pluginName] || null)(requestEvent, responseObject, error)
+              pluginsForHook[pluginName](options[pluginName] || null)(requestEvent, responseObject, error, context)
             })
         })
 
