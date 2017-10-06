@@ -29,11 +29,16 @@ export default function runHandlerWithMiddleware (fn, responseObject, registered
       })
 
     return Promise.resolve()
+      // Pre-execute plugins
       .then(() => processPluginsForHook(PluginHook.PRE_EXECUTE))
+      // Execute actual handler function
       .then(() => fn.call(this, event))
+      // Execute post-execute plugins after the handler has been executed
       .then(response => processPluginsForHook(PluginHook.POST_EXECUTE, response))
       .catch(err => processPluginsForHook(PluginHook.ON_ERROR, err))
       .then(() => callback(null, responseObject))
+
+      // Finally hook, once everything is complete
       .then(() => processPluginsForHook(PluginHook.FINALLY))
   }
 }
