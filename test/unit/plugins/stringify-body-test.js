@@ -1,5 +1,5 @@
 import { should } from 'chai'
-import StringifyBodyPlugin from '../../src/plugins/stringify-body'
+import StringifyBodyPlugin from '../../../src/plugins/stringify-body'
 
 describe('stringify-body middleware', () => {
   before(() => {
@@ -12,7 +12,7 @@ describe('stringify-body middleware', () => {
 
     const req = {}
     const res = {
-      body: { hello: "world"}
+      body: { hello: 'world' }
     }
 
     plugin(req, res)

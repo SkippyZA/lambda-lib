@@ -1,5 +1,5 @@
 import { should } from 'chai'
-import StatusCodePlugin from '../../src/plugins/status-code'
+import StatusCodePlugin from '../../../src/plugins/status-code'
 
 describe('status-code plugin', () => {
   before(() => {

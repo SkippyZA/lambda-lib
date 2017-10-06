@@ -1,5 +1,5 @@
 import { should } from 'chai'
-import safeJson from '../../src/utils/safe-json'
+import safeJson from '../../../src/utils/safe-json'
 
 describe('safe-json', () => {
   before(() => {

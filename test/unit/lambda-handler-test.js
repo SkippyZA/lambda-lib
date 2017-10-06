@@ -1,6 +1,5 @@
 import { should, expect } from 'chai'
-import LambdaHandler from '../src/lambda-handler'
-import ApiGateway from '../src/api-gateway'
+import LambdaHandler from '../../src/lambda-handler'
 
 describe('lambda-handler class decorator', () => {
   before(() => {
@@ -15,11 +14,11 @@ describe('lambda-handler class decorator', () => {
         this._hello = 'hello world'
       }
 
-      someHandler() {
+      someHandler () {
         return this._hello
       }
 
-      testFunction() {
+      testFunction () {
         return 'test'
       }
     }
@@ -29,7 +28,7 @@ describe('lambda-handler class decorator', () => {
         const t = new Test()
         const handlers = t.lambdaHandlers()
 
-        handlers.should.be.an.object
+        handlers.should.be.an('object')
         t.someHandler().should.equal('hello world')
         t.testFunction().should.equal('test')
       })

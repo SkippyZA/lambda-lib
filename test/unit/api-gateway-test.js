@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-expressions */
 import { should, expect } from 'chai'
-import { ApiGateway } from '../src/index.js'
+import { ApiGateway } from '../../src/index.js'
 
 describe('api-gateway decorator', () => {
   before(() => {
@@ -11,7 +12,7 @@ describe('api-gateway decorator', () => {
     it('should work with no parameters', (done) => {
       class Test {
         @ApiGateway()
-        testMethod(event) {
+        testMethod (event) {
           return Promise.resolve(event.test)
         }
       }
@@ -19,6 +20,7 @@ describe('api-gateway decorator', () => {
       const test = new Test()
 
       test.testMethod({ test: 'test string' }, null, (err, res) => {
+        expect(err).to.be.null
         res.should.be.an('object')
 
         res.should.have.property('headers')
@@ -36,7 +38,7 @@ describe('api-gateway decorator', () => {
     it('should return a status code of 500 for an unknown exception', (done) => {
       class Test {
         @ApiGateway()
-        testMethod(event) {
+        testMethod (event) {
           throw new Error('Test')
         }
       }
@@ -53,8 +55,8 @@ describe('api-gateway decorator', () => {
 
     it('should use the status code in the error map when error is matched', (done) => {
       class Test {
-        @ApiGateway({ errorMap: { Error: 404 }})
-        testMethod(event) {
+        @ApiGateway({ errorMap: { Error: 404 } })
+        testMethod (event) {
           throw new Error('Test')
         }
       }

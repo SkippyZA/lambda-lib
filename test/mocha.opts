@@ -1,0 +1,5 @@
+--require babel-register
+--require ./test/support/setup.js
+--recursive
+--reporter spec
+--check-leaks
