@@ -1,4 +1,4 @@
-import ApiGatewayPlugin from './api-gateway-plugin'
+import PluginHook from './enums/hooks'
 
 import safeJson from './utils/safe-json'
 import defaultLogger from './utils/logger'
@@ -55,7 +55,7 @@ function ApiGateway (options) {
       Promise.resolve(requestEvent)
         // Run `before` middleware
         .then(e => {
-          processPluginsForHook(ApiGatewayPlugin.Hook.PRE_EXECUTE)
+          processPluginsForHook(PluginHook.PRE_EXECUTE)
           return e
         })
         // Execute handler
@@ -63,7 +63,7 @@ function ApiGateway (options) {
         // Run `after` middleware
         .then(r => {
           responseObject.body = r
-          processPluginsForHook(ApiGatewayPlugin.Hook.POST_EXECUTE)
+          processPluginsForHook(PluginHook.POST_EXECUTE)
         })
         .catch(err => {
           logger.error(`decorator.api-gateway: error occured. (${err.message})`)
@@ -76,7 +76,7 @@ function ApiGateway (options) {
             }
           })
 
-          processPluginsForHook(ApiGatewayPlugin.Hook.ON_ERROR, err)
+          processPluginsForHook(PluginHook.ON_ERROR, err)
         })
         // Build up lambda response callback
         .then(() => {
@@ -86,7 +86,7 @@ function ApiGateway (options) {
         })
         .then(() => {
           // Run the 'FINALLY' plugins
-          processPluginsForHook(ApiGatewayPlugin.Hook.FINALLY)
+          processPluginsForHook(PluginHook.FINALLY)
         })
     }
 

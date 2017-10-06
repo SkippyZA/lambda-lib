@@ -1,10 +1,12 @@
-import ApiGatewayPlugin from '../api-gateway-plugin'
+import AbstractLambdaPlugin from './abstract-lambda-plugin'
+import PluginHook from '../enums/hooks'
+import LambdaType from '../enums/lambda-type'
 
-export default class StringifyBody extends ApiGatewayPlugin {
+export default class StringifyBody extends AbstractLambdaPlugin {
   constructor () {
-    super('stringifyBody')
+    super('stringifyBody', LambdaType.API_GATEWAY)
 
-    this.addHook(ApiGatewayPlugin.Hook.POST_EXECUTE, this.stringifyBody.bind(this))
+    this.addHook(PluginHook.POST_EXECUTE, this.stringifyBody.bind(this))
   }
 
   /**
