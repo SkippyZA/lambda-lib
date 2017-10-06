@@ -26,11 +26,11 @@ describe('api-gateway decorator', () => {
 
         res.should.have.property('headers')
         res.should.have.property('statusCode')
-        // res.should.have.property('body')
+        res.should.have.property('body')
 
         res.statusCode.should.equal(200)
         res.headers.should.eql({})
-        // res.body.should.equal('"test string"')
+        res.body.should.equal('"test string"')
 
         done()
       })

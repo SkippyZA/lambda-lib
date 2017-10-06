@@ -12,16 +12,15 @@ describe('lambda decorator', () => {
       class Test {
         @Lambda()
         testFunction () {
-          return {
-            hello: 'world'
-          }
+          return { hello: 'world' }
         }
       }
 
       const test = new Test()
 
-      test.testFunction({ test: 'test string' }, null, (err, res) => {
-        // res.should.equal('test')
+      test.testFunction({}, null, (err, res) => {
+        expect(err).to.be.null()
+        res.should.deep.equal({ data: { hello: 'world' } })
         done()
       })
     })

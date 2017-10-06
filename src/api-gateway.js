@@ -1,5 +1,6 @@
 import LambdaType from './enums/lambda-type'
 
+import ApplyApiGatewayBody from './plugins/apply-api-gateway-body'
 import CorsPlugin from './plugins/cors'
 import StatusCodePlugin from './plugins/status-code'
 import StringifyBodyPlugin from './plugins/stringify-body'
@@ -44,6 +45,7 @@ ApiGateway.registerPlugin = function (plugin) {
 
 // Register default plugins
 ApiGateway.registerPlugin(new CorsPlugin())
+ApiGateway.registerPlugin(new ApplyApiGatewayBody())
 ApiGateway.registerPlugin(new StatusCodePlugin())
 ApiGateway.registerPlugin(new StringifyBodyPlugin())
 ApiGateway.registerPlugin(new ErrorStatusCodeMap())

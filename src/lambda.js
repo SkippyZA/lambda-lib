@@ -1,16 +1,18 @@
-import LambdaType from './enums/lambda-type'
+import ApplyBody from './plugins/apply-body'
 import runHandlerWithMiddleware from './utils/run-handler-with-middleware'
 
-let registeredPlugins = []
+let a = [
+  new ApplyBody()
+]
 
 function Lambda (options) {
   options = options || {}
 
   return function (target, key, descriptor) {
     const fn = descriptor.value
-    const responseObject = {}
+    let responseObject = {}
 
-    descriptor.value = runHandlerWithMiddleware(fn, responseObject, registeredPlugins, options)
+    descriptor.value = runHandlerWithMiddleware(fn, responseObject, a, options)
     return descriptor
   }
 }
