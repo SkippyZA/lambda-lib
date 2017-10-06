@@ -1,12 +1,11 @@
-import PluginHook from './enums/hooks'
-
-import safeJson from './utils/safe-json'
-import defaultLogger from './utils/logger'
+import LambdaType from './enums/lambda-type'
 
 import CorsPlugin from './plugins/cors'
 import StatusCodePlugin from './plugins/status-code'
 import StringifyBodyPlugin from './plugins/stringify-body'
 import ErrorStatusCodeMap from './plugins/error-status-code-map'
+
+import runHandlerWithMiddleware from './utils/run-handler-with-middleware'
 
 let registeredPlugins = []
 
@@ -15,7 +14,6 @@ let registeredPlugins = []
  */
 function ApiGateway (options) {
   options = options || {}
-  const logger = options.logger || defaultLogger(options.logLevel || 'none')
 
   /**
    * Decorator code.
@@ -26,75 +24,21 @@ function ApiGateway (options) {
    */
   return function (target, key, descriptor) {
     const fn = descriptor.value
+    const responseObject = { statusCode: 200, headers: {}, body: '' }
 
-    /**
-     * Lambda handler code
-     */
-    descriptor.value = function (event, context, callback) {
-      logger.debug('decorator.api-gateway: start')
-
-      // Clone event object
-      const requestEvent = JSON.parse(JSON.stringify(event))
-      requestEvent.body = safeJson(requestEvent.body)
-
-      // Blank response object
-      const responseObject = { statusCode: 200, headers: {}, body: '' }
-
-      // Execute the middleware stack using the above request and response
-      const processPluginsForHook = (hook, error) => registeredPlugins
-        .forEach(plugin => {
-          const pluginsForHook = plugin.hooks[hook] || {}
-
-          Object.getOwnPropertyNames(pluginsForHook)
-            .forEach(pluginName => {
-              pluginsForHook[pluginName](options[pluginName] || null)(requestEvent, responseObject, error, context)
-            })
-        })
-
-      // Start the whole promise chain off using the requestEvent
-      Promise.resolve(requestEvent)
-        // Run `before` middleware
-        .then(e => {
-          processPluginsForHook(PluginHook.PRE_EXECUTE)
-          return e
-        })
-        // Execute handler
-        .then(e => fn.apply(this, [e]))
-        // Run `after` middleware
-        .then(r => {
-          responseObject.body = r
-          processPluginsForHook(PluginHook.POST_EXECUTE)
-        })
-        .catch(err => {
-          logger.error(`decorator.api-gateway: error occured. (${err.message})`)
-
-          responseObject.body = JSON.stringify({
-            error: {
-              message: err.message,
-              ...(err || {}),
-              _stackTrace: err.stack.split('\n').map(x => x.trim())
-            }
-          })
-
-          processPluginsForHook(PluginHook.ON_ERROR, err)
-        })
-        // Build up lambda response callback
-        .then(() => {
-          logger.debug('decorator.api-gateway: response:', responseObject)
-
-          callback(null, responseObject)
-        })
-        .then(() => {
-          // Run the 'FINALLY' plugins
-          processPluginsForHook(PluginHook.FINALLY)
-        })
-    }
-
+    descriptor.value = runHandlerWithMiddleware(fn, responseObject, registeredPlugins, options)
     return descriptor
   }
 }
 
 ApiGateway.registerPlugin = function (plugin) {
+  const isGeneric = plugin.isSupportedType(LambdaType.GENERIC)
+  const isApiGateway = plugin.isSupportedType(LambdaType.API_GATEWAY)
+
+  if (!(isGeneric || isApiGateway)) {
+    throw new TypeError('Expected plugin to be either `LambdaType.GENERIC` or `LambdaType.API_GATEWAY`')
+  }
+
   registeredPlugins.push(plugin)
 }
 
