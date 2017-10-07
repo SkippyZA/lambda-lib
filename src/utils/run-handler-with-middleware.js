@@ -10,10 +10,6 @@ export default function runHandlerWithMiddleware (fn, responseObject, registered
    * @param {function} callback callback function
    */
   return function (event, context, callback) {
-    // Clone event object
-    // const requestEvent = JSON.parse(JSON.stringify(event))
-    // requestEvent.body = safeJson(requestEvent.body)
-
     // Execute the middleware stack using the above request and response
     const processPluginsForHook = (hook, data) => registeredPlugins
       .forEach(plugin => {
