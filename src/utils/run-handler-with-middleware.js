@@ -20,7 +20,6 @@ export default function runHandlerWithMiddleware (fn, responseObject, registered
             const params = options[pluginName] || null
             const pluginFn = pluginsForHook[pluginName](params)
 
-            // pluginFn(requestEvent, responseObject, data, context)
             pluginFn(event, responseObject, data, context)
           })
       })
