@@ -10,8 +10,8 @@ function Handler (options) {
     descriptor.value = function (event, context, callback) {
       const requestEvent = JSON.parse(JSON.stringify(event))
 
-      Promise.resolve(requestEvent)
-        .then(e => fn.apply(this, [e]))
+      Promise.resolve([requestEvent, context])
+        .then(([e, c]) => fn.apply(this, [e, c]))
         .then(
           res => callback(null, res),
           err => callback(err)
