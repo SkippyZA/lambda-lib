@@ -1,10 +1,12 @@
-import ApiGatewayPlugin from '../api-gateway-plugin'
+import AbstractLambdaPlugin from './abstract-lambda-plugin'
+import PluginHook from '../enums/hooks'
+import LambdaType from '../enums/lambda-type'
 
-export default class ErrorStatusCodeMap extends ApiGatewayPlugin {
+export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
   constructor () {
-    super('errorMap')
+    super('errorMap', LambdaType.API_GATEWAY)
 
-    this.addHook(ApiGatewayPlugin.Hook.ON_ERROR, this.errorMapper.bind(this))
+    this.addHook(PluginHook.ON_ERROR, this.errorMapper.bind(this))
   }
 
   /**

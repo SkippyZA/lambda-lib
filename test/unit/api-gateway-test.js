@@ -20,6 +20,7 @@ describe('api-gateway decorator', () => {
       const test = new Test()
 
       test.testMethod({ test: 'test string' }, null, (err, res) => {
+        console.log(res)
         expect(err).to.be.null
         res.should.be.an('object')
 

@@ -1,10 +1,12 @@
-import ApiGatewayPlugin from '../api-gateway-plugin'
+import AbstractLambdaPlugin from './abstract-lambda-plugin'
+import PluginHook from '../enums/hooks'
+import LambdaType from '../enums/lambda-type'
 
-export default class Cors extends ApiGatewayPlugin {
+export default class Cors extends AbstractLambdaPlugin {
   constructor () {
-    super('cors')
+    super('cors', LambdaType.API_GATEWAY)
 
-    this.addHook(ApiGatewayPlugin.Hook.PRE_EXECUTE, this.corsPlugin.bind(this))
+    this.addHook(PluginHook.PRE_EXECUTE, this.corsPlugin.bind(this))
   }
 
   /**
