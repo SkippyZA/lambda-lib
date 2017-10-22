@@ -1,5 +1,4 @@
 import PluginHook from '../enums/hooks'
-import safeJson from './safe-json'
 
 export default function runHandlerWithMiddleware (fn, responseObject, registeredPlugins = [], options = {}) {
   /**

@@ -1,5 +1,3 @@
-import ApiGatewayPlugin from './api-gateway-plugin'
-import safeJson from './utils/safe-json'
 import LambdaType from './enums/lambda-type'
 import ApplyApiGatewayBody from './plugins/apply-api-gateway-body'
 import CorsPlugin from './plugins/cors'

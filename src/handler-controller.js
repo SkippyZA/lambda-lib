@@ -1,3 +1,5 @@
+const ACCESSOR_FN_NAME = 'getHandlers'
+
 /**
  * Lambda class decorator
  *
@@ -5,16 +7,16 @@
  * method which returns an object of functions, that when executed, are bound
  * correctly.
  */
-function LambdaHandler (target) {
+function HandlerController (target) {
   // Add a function to the class that returns
   // the functions as an object
   Object.defineProperty(
     target.prototype,
-    'lambdaHandlers',
+    ACCESSOR_FN_NAME,
     {
       value: function () {
         return Object.getOwnPropertyNames(target.prototype)
-          .filter(fn => !['constructor', 'lambdaHandlers'].includes(fn))
+          .filter(fn => !['constructor', ACCESSOR_FN_NAME].includes(fn))
           .reduce((accum, fn) => {
             return {
               ...accum,
@@ -26,4 +28,4 @@ function LambdaHandler (target) {
   )
 }
 
-export default LambdaHandler
+export default HandlerController

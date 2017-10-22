@@ -1,14 +1,14 @@
 import { should, expect } from 'chai'
-import LambdaHandler from '../../src/lambda-handler'
+import HandlerController from '../../src/handler-controller'
 
-describe('lambda-handler class decorator', () => {
+describe('handler controller class decorator', () => {
   before(() => {
     should()
     expect()
   })
 
   describe('when applied to a class', () => {
-    @LambdaHandler
+    @HandlerController
     class Test {
       constructor () {
         this._hello = 'hello world'
@@ -26,7 +26,7 @@ describe('lambda-handler class decorator', () => {
     describe('using the newly defined lambdaHandlers property method', () => {
       it('should execute the class methods on the object returned from lambdaHandlers()', () => {
         const t = new Test()
-        const handlers = t.lambdaHandlers()
+        const handlers = t.getHandlers()
 
         handlers.should.be.an('object')
         t.someHandler().should.equal('hello world')
