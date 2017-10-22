@@ -1,18 +1,11 @@
+import AbstractHandler from './abstract-handler'
 import ApplyBody from '../plugins/apply-body'
-import runHandlerWithMiddleware from '../utils/run-handler-with-middleware'
 
-let registeredPlugins = [ new ApplyBody() ]
-
-function Lambda (options) {
-  options = options || {}
-
-  return function (target, key, descriptor) {
-    const fn = descriptor.value
-    let responseObject = {}
-
-    descriptor.value = runHandlerWithMiddleware(fn, responseObject, registeredPlugins, options)
-    return descriptor
+class LambdaHandler extends AbstractHandler {
+  constructor () {
+    super([ new ApplyBody() ])
   }
 }
 
-export default Lambda
+const handler = new LambdaHandler()
+export default handler.getDecorator()
