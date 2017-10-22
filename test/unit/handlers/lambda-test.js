@@ -1,5 +1,5 @@
 import { should, expect } from 'chai'
-import Lambda from '../../src/lambda'
+import Lambda from '../../../src/handlers/lambda'
 
 describe('lambda decorator', () => {
   before(() => {

@@ -1,11 +1,11 @@
-import LambdaType from './enums/lambda-type'
-import ApplyApiGatewayBody from './plugins/apply-api-gateway-body'
-import CorsPlugin from './plugins/cors'
-import StatusCodePlugin from './plugins/status-code'
-import StringifyBodyPlugin from './plugins/stringify-body'
-import ErrorStatusCodeMap from './plugins/error-status-code-map'
+import LambdaType from '../enums/lambda-type'
+import ApplyApiGatewayBody from '../plugins/apply-api-gateway-body'
+import CorsPlugin from '../plugins/cors'
+import StatusCodePlugin from '../plugins/status-code'
+import StringifyBodyPlugin from '../plugins/stringify-body'
+import ErrorStatusCodeMap from '../plugins/error-status-code-map'
 
-import runHandlerWithMiddleware from './utils/run-handler-with-middleware'
+import runHandlerWithMiddleware from '../utils/run-handler-with-middleware'
 
 let registeredPlugins = []
 

@@ -1,5 +1,5 @@
-import ApplyBody from './plugins/apply-body'
-import runHandlerWithMiddleware from './utils/run-handler-with-middleware'
+import ApplyBody from '../plugins/apply-body'
+import runHandlerWithMiddleware from '../utils/run-handler-with-middleware'
 
 let registeredPlugins = [
   new ApplyBody()

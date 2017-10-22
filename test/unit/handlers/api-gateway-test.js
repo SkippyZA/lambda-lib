@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { should, expect } from 'chai'
-import { ApiGateway } from '../../src/index.js'
+import { ApiGateway } from '../../../src/index.js'
 
 describe('api-gateway decorator', () => {
   before(() => {

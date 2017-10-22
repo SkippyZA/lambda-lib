@@ -18,7 +18,7 @@
   "scripts": {
     "pretest": "standard | snazzy",
     "compile": "babel -d lib/ src/",
-    "coverage": "nyc --reporter-html --reporter=text --reporter=lcov npm test",
+    "coverage": "nyc --reporter=lcov --reporter=json npm test",
     "prepublish": "npm run compile",
     "test": "npm run compile && mocha"
   },

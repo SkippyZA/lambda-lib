@@ -1,5 +1,5 @@
 export { default as AbstractLambdaPlugin } from './plugins/abstract-lambda-plugin'
-export { default as ApiGateway } from './api-gateway'
-export { default as Lambda } from './lambda'
+export { default as ApiGateway } from './handlers/api-gateway'
+export { default as Lambda } from './handlers/lambda'
 export { default as HandlerController } from './handler-controller'
 export { default as Plugins } from './plugins'
