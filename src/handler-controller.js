@@ -8,23 +8,26 @@ const ACCESSOR_FN_NAME = 'getHandlers'
  * correctly.
  */
 function HandlerController (target) {
-  // Add a function to the class that returns
-  // the functions as an object
+  /**
+   * Build up an object containing all the methods on the object attached.
+   *
+   * @returns {*}
+   */
+  function accessorFn () {
+    return Object.getOwnPropertyNames(target.prototype)
+      .filter(fn => !['constructor', ACCESSOR_FN_NAME].includes(fn))
+      .reduce((accum, fn) => {
+        return {
+          ...accum,
+          [fn]: this[fn].bind(this)
+        }
+      }, {})
+  }
+
   Object.defineProperty(
     target.prototype,
     ACCESSOR_FN_NAME,
-    {
-      value: function () {
-        return Object.getOwnPropertyNames(target.prototype)
-          .filter(fn => !['constructor', ACCESSOR_FN_NAME].includes(fn))
-          .reduce((accum, fn) => {
-            return {
-              ...accum,
-              [fn]: this[fn].bind(this)
-            }
-          }, {})
-      }
-    }
+    { value: accessorFn }
   )
 }
 

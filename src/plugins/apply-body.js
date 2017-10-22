@@ -4,7 +4,7 @@ import LambdaType from '../enums/lambda-type'
 
 export default class ApplyBody extends AbstractLambdaPlugin {
   constructor () {
-    super('applyBody', LambdaType.GENERIC)
+    super('applyBody', LambdaType.DEFAULT)
 
     this.addHook(PluginHook.POST_EXECUTE, this.applyBody.bind(this))
   }

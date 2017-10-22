@@ -1,5 +1,7 @@
+/**
+ * Lambda type for plugins
+ */
 export default {
-  GENERIC: 'generic',
-  API_GATEWAY: 'api-gateway',
-  SNS: 'sns'
+  DEFAULT: 'default',
+  API_GATEWAY: 'api-gateway'
 }

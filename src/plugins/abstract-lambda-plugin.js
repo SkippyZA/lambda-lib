@@ -21,7 +21,7 @@ class AbstractLambdaPlugin {
         this.supportedLambdaTypes = [ supportedLambdaTypes ]
       }
     } else {
-      this.supportedLambdaTypes = [ LambdaType.GENERIC ]
+      this.supportedLambdaTypes = [ LambdaType.DEFAULT ]
     }
   }
 

@@ -1,3 +1,6 @@
+/**
+ * Hooks availabe for plugins
+ */
 export default {
   PRE_EXECUTE: 'PRE_EXECUTE',
   POST_EXECUTE: 'POST_EXECUTE',
