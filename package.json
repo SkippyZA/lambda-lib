@@ -18,7 +18,7 @@
   "scripts": {
     "pretest": "standard | snazzy",
     "compile": "babel -d lib/ src/",
-    "coverage": "nyc --reporter=lcov --reporter=json npm test",
+    "coverage": "nyc --reporter=text --reporter=lcov --reporter=json npm test",
     "prepublish": "npm run compile",
     "test": "npm run compile && mocha"
   },
@@ -40,5 +40,8 @@
   "standard": {
     "parser": "babel-eslint",
     "env": "mocha"
+  },
+  "nyc": {
+    "include": ["src/**"]
   }
 }
