@@ -1,9 +1,7 @@
 import ApplyBody from '../plugins/apply-body'
 import runHandlerWithMiddleware from '../utils/run-handler-with-middleware'
 
-let registeredPlugins = [
-  new ApplyBody()
-]
+let registeredPlugins = [ new ApplyBody() ]
 
 function Lambda (options) {
   options = options || {}
