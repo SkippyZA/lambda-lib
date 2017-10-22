@@ -1,7 +1,6 @@
 import ApiGatewayPlugin from './api-gateway-plugin'
 
 import safeJson from './utils/safe-json'
-import defaultLogger from './utils/logger'
 
 import CorsPlugin from './plugins/cors'
 import StatusCodePlugin from './plugins/status-code'
@@ -15,7 +14,6 @@ let registeredPlugins = []
  */
 function ApiGateway (options) {
   options = options || {}
-  const logger = options.logger || defaultLogger(options.logLevel || 'none')
 
   /**
    * Decorator code.
@@ -31,8 +29,6 @@ function ApiGateway (options) {
      * Lambda handler code
      */
     descriptor.value = function (event, context, callback) {
-      logger.debug('decorator.api-gateway: start')
-
       // Clone event object
       const requestEvent = JSON.parse(JSON.stringify(event))
       requestEvent.body = safeJson(requestEvent.body)
@@ -66,8 +62,6 @@ function ApiGateway (options) {
           processPluginsForHook(ApiGatewayPlugin.Hook.POST_EXECUTE)
         })
         .catch(err => {
-          logger.error(`decorator.api-gateway: error occured. (${err.message})`)
-
           responseObject.body = JSON.stringify({
             error: {
               message: err.message,
@@ -80,8 +74,6 @@ function ApiGateway (options) {
         })
         // Build up lambda response callback
         .then(() => {
-          logger.debug('decorator.api-gateway: response:', responseObject)
-
           callback(null, responseObject)
         })
         .then(() => {
