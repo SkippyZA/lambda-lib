@@ -24,5 +24,22 @@ describe('lambda decorator', () => {
         done()
       })
     })
+
+    it('should call the callback with an error if the promise is rejected', done => {
+      class Test {
+        @Lambda()
+        testFunction () {
+          return Promise.reject(new Error('test error'))
+        }
+      }
+
+      const test = new Test()
+
+      test.testFunction({}, null, (err, res) => {
+        expect(res).to.be.null()
+        expect(err).to.not.be.null()
+        done()
+      })
+    })
   })
 })
