@@ -48,6 +48,15 @@ class AbstractLambdaPlugin {
   isSupportedType (type) {
     return this.supportedLambdaTypes.indexOf(type) > -1
   }
+
+  /**
+   * Get a list for the support types for this lambda plugin
+   *
+   * @returns {LambdaType[]} list of LambdaType
+   */
+  getSupportedType () {
+    return this.supportedLambdaTypes
+  }
 }
 
 export default AbstractLambdaPlugin

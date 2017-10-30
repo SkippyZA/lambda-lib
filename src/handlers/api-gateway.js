@@ -8,6 +8,7 @@ import ErrorStatusCodeMap from '../plugins/error-status-code-map'
 
 class ApiGatewayHandler extends AbstractHandler {
   constructor () {
+    const supportedPlugins = [ LambdaType.API_GATEWAY, LambdaType.GENERIC ]
     const responseObject = { statusCode: 200, headers: {}, body: '' }
     const plugins = [
       new ApplyApiGatewayBody(),
@@ -17,18 +18,7 @@ class ApiGatewayHandler extends AbstractHandler {
       new ErrorStatusCodeMap()
     ]
 
-    super(plugins, responseObject)
-  }
-
-  registerPlugin (plugin) {
-    const isApiGateway = plugin.isSupportedType(LambdaType.API_GATEWAY)
-    const isGeneric = plugin.isSupportedType(LambdaType.GENERIC)
-
-    if (!isApiGateway && !isGeneric) {
-      throw new TypeError('Expected plugin to be of type `LambdaType.GENERIC` or `LambdaType.API_GATEWAY`')
-    }
-
-    return super.registerPlugin(plugin)
+    super(plugins, responseObject, supportedPlugins)
   }
 }
 

@@ -2,7 +2,8 @@ import LambdaType from '../enums/lambda-type'
 import runHandlerWithMiddleware from '../utils/run-handler-with-middleware'
 
 class AbstractHandler {
-  constructor (defaultPlugins = [], responseObject = {}) {
+  constructor (defaultPlugins = [], responseObject = {}, supportedPluginTypes = [ LambdaType.GENERIC ]) {
+    this.supportedPluginTypes = supportedPluginTypes
     this.responseObject = responseObject
     this.registeredPlugins = [
       ...defaultPlugins
@@ -25,10 +26,12 @@ class AbstractHandler {
   }
 
   registerPlugin (plugin) {
-    const isGeneric = plugin.isSupportedType(LambdaType.GENERIC)
+    const isValidPlugin = this.supportedPluginTypes.reduce((accum, type) => {
+      return accum || plugin.isSupportedType(type)
+    }, false)
 
-    if (!isGeneric) {
-      throw new TypeError('Expected plugin to be of type `LambdaType.GENERIC`')
+    if (!isValidPlugin) {
+      throw new TypeError(`Supplied plugin is not supported by this handler.`)
     }
 
     this.registeredPlugins.push(plugin)
