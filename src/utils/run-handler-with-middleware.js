@@ -4,9 +4,9 @@ export default function runHandlerWithMiddleware (fn, responseObject, registered
   /**
    * Run the plugins that have been bound to plugin hooks
    *
-   * Signature: (hook, event)(data) => void
+   * Signature: (event, context)(hook)(data) => void
    */
-  const processPluginsForHook = (hook, event) => data => registeredPlugins
+  const processPluginsForHook = (event, context) => hook => data => registeredPlugins
     .forEach(plugin => {
       const pluginsForHook = plugin.hooks[hook] || {}
 
@@ -27,19 +27,23 @@ export default function runHandlerWithMiddleware (fn, responseObject, registered
    * @param {function} callback callback function
    */
   return function (event, context, callback) {
-    const runPreExecute = processPluginsForHook(PluginHook.PRE_EXECUTE, event)
-    const runPostExecute = processPluginsForHook(PluginHook.POST_EXECUTE, event)
-    const runError = processPluginsForHook(PluginHook.ON_ERROR, event)
-    const runFinally = processPluginsForHook(PluginHook.FINALLY, event)
+    const processPluginsForEvent = processPluginsForHook(event, context)
+
+    const runPreExecute = processPluginsForEvent(PluginHook.PRE_EXECUTE)
+    const runPostExecute = processPluginsForEvent(PluginHook.POST_EXECUTE)
+    const runFinally = processPluginsForEvent(PluginHook.FINALLY)
+    const runError = processPluginsForEvent(PluginHook.ON_ERROR)
 
     // Execute the middleware stack using the above request and response
-    return Promise.resolve()
+    const executionFlow = Promise.resolve()
       // Pre-execute plugins
       .then(() => runPreExecute())
       // Execute actual handler function
       .then(() => fn.call(this, event))
       // Execute post-execute plugins after the handler has been executed
       .then(response => runPostExecute(response))
+
+    return executionFlow
       .catch(err => runError(err))
       // Finally hook, once everything is complete
       .then(() => runFinally())

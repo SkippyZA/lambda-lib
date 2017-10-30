@@ -3,7 +3,7 @@ import ApplyBody from '../plugins/apply-body'
 
 class LambdaHandler extends AbstractHandler {
   constructor () {
-    super([ new ApplyBody() ])
+    super([ new ApplyBody() ], {})
   }
 }
 
