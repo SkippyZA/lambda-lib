@@ -16,10 +16,9 @@ export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
     errorMap = errorMap || {}
 
     return (req, res, error) => {
-      const errorFromMap = Object.getOwnPropertyNames(errorMap)
-        .find(prop => error.constructor.name === prop)
+      const err = errorMap.find(e => error instanceof e.error)
 
-      res.statusCode = errorMap[errorFromMap] || 500
+      res.statusCode = (err && err.status) || 500
     }
   }
 }
