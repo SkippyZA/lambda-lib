@@ -20,6 +20,10 @@ class ApiGatewayHandler extends AbstractHandler {
 
     super(plugins, responseObject, supportedPlugins)
   }
+
+  _callbackHandler (ignoredError, res, cb) {
+    cb(null, res)
+  }
 }
 
 const handler = new ApiGatewayHandler()

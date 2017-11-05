@@ -19,7 +19,7 @@ class AbstractHandler {
       return function (target, key, descriptor) {
         const fn = descriptor.value
 
-        descriptor.value = runHandlerWithMiddleware(fn, thiz.responseObject, thiz.registeredPlugins, options)
+        descriptor.value = runHandlerWithMiddleware(fn, thiz._callbackHandler.bind(thiz), thiz.responseObject, thiz.registeredPlugins, options)
         return descriptor
       }
     }
@@ -35,6 +35,10 @@ class AbstractHandler {
     }
 
     this.registeredPlugins.push(plugin)
+  }
+
+  _callbackHandler (err, res, cb) {
+    cb(err, res)
   }
 }
 

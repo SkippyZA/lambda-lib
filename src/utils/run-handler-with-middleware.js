@@ -1,6 +1,6 @@
 import PluginHook from '../enums/hooks'
 
-export default function runHandlerWithMiddleware (fn, responseObject, registeredPlugins = [], options = {}) {
+export default function runHandlerWithMiddleware (fn, cb, responseObject, registeredPlugins = [], options = {}) {
   /**
    * Run the plugins that have been bound to plugin hooks
    *
@@ -48,6 +48,7 @@ export default function runHandlerWithMiddleware (fn, responseObject, registered
       // Finally hook, once everything is complete
       .then(() => runFinally())
       // Execute the callback
-      .then(() => callback(null, responseObject))
+      // .then(() => callback(null, responseObject))
+      .then(() => cb(null, responseObject, callback))
   }
 }
