@@ -35,15 +35,14 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
     const runError = processPluginsForEvent(PluginHook.ON_ERROR)
 
     // Execute the middleware stack using the above request and response
-    const executionFlow = Promise.resolve()
+    return Promise.resolve()
       // Pre-execute plugins
       .then(() => runPreExecute())
       // Execute actual handler function
       .then(() => fn.call(this, event))
       // Execute post-execute plugins after the handler has been executed
       .then(response => runPostExecute(response))
-
-    return executionFlow
+      // Execute the callback
       .then(
         () => {
           runFinally()
@@ -55,11 +54,5 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
           callback(err, responseObject, callback)
         }
       )
-      // .catch(err => runError(err))
-      // // Finally hook, once everything is complete
-      // .then(() => runFinally())
-      // // Execute the callback
-      // // .then(() => callback(null, responseObject))
-      // .then(() => cb(null, responseObject, callback))
   }
 }
