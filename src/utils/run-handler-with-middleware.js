@@ -44,11 +44,22 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
       .then(response => runPostExecute(response))
 
     return executionFlow
-      .catch(err => runError(err))
-      // Finally hook, once everything is complete
-      .then(() => runFinally())
-      // Execute the callback
-      // .then(() => callback(null, responseObject))
-      .then(() => cb(null, responseObject, callback))
+      .then(
+        () => {
+          runFinally()
+          cb(null, responseObject, callback)
+        },
+        err => {
+          runError(err)
+          runFinally()
+          callback(err, responseObject, callback)
+        }
+      )
+      // .catch(err => runError(err))
+      // // Finally hook, once everything is complete
+      // .then(() => runFinally())
+      // // Execute the callback
+      // // .then(() => callback(null, responseObject))
+      // .then(() => cb(null, responseObject, callback))
   }
 }

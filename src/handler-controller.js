@@ -24,11 +24,7 @@ function HandlerController (target) {
       }, {})
   }
 
-  Object.defineProperty(
-    target.prototype,
-    ACCESSOR_FN_NAME,
-    { value: accessorFn }
-  )
+  Object.defineProperty(target.prototype, ACCESSOR_FN_NAME, { value: accessorFn })
 }
 
 export default HandlerController

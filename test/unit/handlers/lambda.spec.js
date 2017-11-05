@@ -36,9 +36,9 @@ describe('lambda handler decorator', () => {
       const test = new Test()
 
       test.testFunction({}, null, (err, res) => {
-        console.log(err, res)
-        // expect(res).to.be.null()
-        // expect(err).to.not.be.null()
+        expect(err).to.be.instanceOf(Error)
+        err.message.should.equal('test error')
+
         done()
       })
     })
