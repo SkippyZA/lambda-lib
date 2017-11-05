@@ -52,23 +52,5 @@ describe('api-gateway decorator', () => {
         done()
       })
     })
-
-    it('should use the status code in the error map when error is matched', (done) => {
-      class Test {
-        @ApiGateway({ errorMap: { Error: 404 } })
-        testMethod (event) {
-          throw new Error('Test')
-        }
-      }
-
-      const test = new Test()
-
-      test.testMethod({ test: 'test string' }, null, (err, res) => {
-        expect(err).to.be.null
-        res.statusCode.should.equal(404)
-
-        done()
-      })
-    })
   })
 })

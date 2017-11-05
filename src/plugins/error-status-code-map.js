@@ -13,7 +13,7 @@ export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
    * Map errors to custom status codes
    */
   errorMapper (errorMap) {
-    errorMap = errorMap || {}
+    errorMap = errorMap || []
 
     return (req, res, error) => {
       const err = errorMap.find(e => error instanceof e.error)
