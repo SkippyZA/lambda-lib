@@ -1,23 +1,24 @@
-import ApiGatewayPlugin from '../api-gateway-plugin'
+import AbstractLambdaPlugin from './abstract-lambda-plugin'
+import PluginHook from '../enums/hooks'
+import LambdaType from '../enums/lambda-type'
 
-export default class ErrorStatusCodeMap extends ApiGatewayPlugin {
+export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
   constructor () {
-    super('errorMap')
+    super('errorMap', LambdaType.API_GATEWAY)
 
-    this.addHook(ApiGatewayPlugin.Hook.ON_ERROR, this.errorMapper.bind(this))
+    this.addHook(PluginHook.ON_ERROR, this.errorMapper.bind(this))
   }
 
   /**
    * Map errors to custom status codes
    */
   errorMapper (errorMap) {
-    errorMap = errorMap || {}
+    errorMap = errorMap || []
 
     return (req, res, error) => {
-      const errorFromMap = Object.getOwnPropertyNames(errorMap)
-        .find(prop => error.constructor.name === prop)
+      const err = errorMap.find(e => error instanceof e.error)
 
-      res.statusCode = errorMap[errorFromMap] || 500
+      res.statusCode = (err && err.status) || 500
     }
   }
 }

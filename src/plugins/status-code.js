@@ -1,10 +1,12 @@
-import ApiGatewayPlugin from '../api-gateway-plugin'
+import AbstractLambdaPlugin from './abstract-lambda-plugin'
+import PluginHook from '../enums/hooks'
+import LambdaType from '../enums/lambda-type'
 
-export default class StatusCode extends ApiGatewayPlugin {
+export default class StatusCode extends AbstractLambdaPlugin {
   constructor () {
-    super('statusCode')
+    super('statusCode', LambdaType.API_GATEWAY)
 
-    this.addHook(ApiGatewayPlugin.Hook.PRE_EXECUTE, this.statusCodePlugin.bind(this))
+    this.addHook(PluginHook.PRE_EXECUTE, this.statusCodePlugin.bind(this))
   }
 
   /**

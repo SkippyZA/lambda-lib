@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { should, expect } from 'chai'
-import { ApiGateway } from '../../src/index.js'
+import { ApiGateway } from '../../../src/index.js'
 
 describe('api-gateway decorator', () => {
   before(() => {
@@ -48,24 +48,6 @@ describe('api-gateway decorator', () => {
       test.testMethod({ test: 'test string' }, null, (err, res) => {
         expect(err).to.be.null
         res.statusCode.should.equal(500)
-
-        done()
-      })
-    })
-
-    it('should use the status code in the error map when error is matched', (done) => {
-      class Test {
-        @ApiGateway({ errorMap: { Error: 404 } })
-        testMethod (event) {
-          throw new Error('Test')
-        }
-      }
-
-      const test = new Test()
-
-      test.testMethod({ test: 'test string' }, null, (err, res) => {
-        expect(err).to.be.null
-        res.statusCode.should.equal(404)
 
         done()
       })

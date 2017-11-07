@@ -10,9 +10,9 @@ and eliminate boilerplate code
 ## Example
 
 ```javascript
-import { LambdaHandler, ApiGateway } from 'lambda-lib'
+import { HandlerController, ApiGateway } from 'lambda-lib'
 
-@LambdaHandler
+@HandlerController
 class SampleLambdaHandler {
   @ApiGateway({ statusCode: 200, cors: true })
   helloHandler (event) {
@@ -27,7 +27,7 @@ class SampleLambdaHandler {
 
 const handler = new SampleLambdaHandler()
 
-export default handler.lambdaHandlers()
+export default handler.getHandlers()
 ```
 
 ### Sample Response
