@@ -1,7 +1,7 @@
 import { should } from 'chai'
 import ErrorResponsePlugin from '../../../src/plugins/error-response'
 
-describe('error response plugin', () => {
+describe('error-response plugin', () => {
   before(() => {
     should()
   })

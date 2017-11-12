@@ -1,7 +1,7 @@
 import { should, expect } from 'chai'
 import Lambda from '../../../src/handlers/lambda'
 
-describe('lambda handler decorator', () => {
+describe('lambda decorator', () => {
   before(() => {
     should()
     expect()

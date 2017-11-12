@@ -12,7 +12,7 @@ const SAMPLE_ERROR_MAP = [
   }
 ]
 
-describe('error status code map', () => {
+describe('error-status-code map', () => {
   describe('when supplied with an error map', () => {
     let mapFn, req, res
 

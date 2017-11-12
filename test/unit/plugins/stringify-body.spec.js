@@ -1,7 +1,7 @@
 import { should } from 'chai'
 import StringifyBodyPlugin from '../../../src/plugins/stringify-body'
 
-describe('stringify-body middleware', () => {
+describe('stringify-body plugin', () => {
   before(() => {
     should()
   })

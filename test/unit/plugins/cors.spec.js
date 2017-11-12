@@ -1,6 +1,6 @@
 import { should } from 'chai'
 
-describe('cors middleware', () => {
+describe('cors plugin', () => {
   before(() => {
     should()
   })

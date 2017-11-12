@@ -1,7 +1,7 @@
 import { should } from 'chai'
 import safeJson from '../../../src/utils/safe-json'
 
-describe('safe-json', () => {
+describe('safe-json utility method', () => {
   before(() => {
     should()
   })
