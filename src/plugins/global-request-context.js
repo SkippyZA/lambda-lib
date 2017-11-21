@@ -15,22 +15,27 @@ export default class GlobalRequestContext extends AbstractLambdaPlugin {
         rrid: context.awsRequestId
       }
 
-      for (var header in req.headers) {
-        if (header.toLowerCase().startsWith('x-correlation-')) {
-          ctx[header] = req.headers[header]
-        }
-      }
-
       if (!ctx['x-correlation-id']) {
         ctx['x-correlation-id'] = ctx.rrid
       }
 
-      if (req.headers && req.headers['User-Agent']) {
-        ctx['User-Agent'] = req.headers['User-Agent']
-      }
+      // api-gateway headers. currently i am just setting these from
+      // the headers property. this will expand to place the appropriate
+      // headers into the global context.
+      if (req.headers) {
+        for (var header in req.headers) {
+          if (header.toLowerCase().startsWith('x-correlation-')) {
+            ctx[header] = req.headers[header]
+          }
+        }
 
-      if (req.headers && req.headers['Debug-Log-Enabled'] === 'true') {
-        ctx['Debug-Log-Enabled'] = 'true'
+        if (req.headers['User-Agent']) {
+          ctx['User-Agent'] = req.headers['User-Agent']
+        }
+
+        if (req.headers['Debug-Log-Enabled'] === 'true') {
+          ctx['Debug-Log-Enabled'] = 'true'
+        }
       }
 
       global.CONTEXT = ctx
