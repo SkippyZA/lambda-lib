@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 export { default as AbstractLambdaPlugin } from './plugins/abstract-lambda-plugin'
 export { default as Plugins } from './plugins'
 
