@@ -5,12 +5,14 @@ import CorsPlugin from '../plugins/cors'
 import StatusCodePlugin from '../plugins/status-code'
 import StringifyBodyPlugin from '../plugins/stringify-body'
 import ErrorStatusCodeMap from '../plugins/error-status-code-map'
+import GlobalRequestContext from '../plugins/global-request-context'
 
 class ApiGatewayHandler extends AbstractHandler {
   constructor () {
     const supportedPlugins = [ LambdaType.API_GATEWAY, LambdaType.GENERIC ]
     const responseObject = { statusCode: 200, headers: {}, body: '' }
     const plugins = [
+      new GlobalRequestContext(),
       new ApplyApiGatewayBody(),
       new CorsPlugin(),
       new StatusCodePlugin(),
@@ -28,4 +30,3 @@ class ApiGatewayHandler extends AbstractHandler {
 
 const handler = new ApiGatewayHandler()
 export default handler.getDecorator()
-export const registerPlugin = handler.registerPlugin.bind(handler)
