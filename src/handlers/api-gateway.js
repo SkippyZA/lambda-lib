@@ -28,3 +28,4 @@ class ApiGatewayHandler extends AbstractHandler {
 
 const handler = new ApiGatewayHandler()
 export default handler.getDecorator()
+export const registerPlugin = handler.registerPlugin.bind(handler)
