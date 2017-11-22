@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0-beta.6",
+  "version": "2.0.0-beta.7",
   "name": "lambda-lib",
   "description": "Decorators and tools for AWS Lambda",
   "keywords": [

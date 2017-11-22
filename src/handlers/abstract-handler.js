@@ -13,7 +13,7 @@ class AbstractHandler {
   getDecorator () {
     const thiz = this
 
-    return options => {
+    const decorator = function (options) {
       options = options || {}
 
       return function (target, key, descriptor) {
@@ -23,6 +23,9 @@ class AbstractHandler {
         return descriptor
       }
     }
+
+    decorator.registerPlugin = this.registerPlugin.bind(this)
+    return decorator
   }
 
   registerPlugin (plugin) {

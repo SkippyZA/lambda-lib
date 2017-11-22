@@ -11,8 +11,10 @@ export default class GlobalRequestContext extends AbstractLambdaPlugin {
 
   setGlobalContext () {
     return (req, res, data, context) => {
-      const ctx = {
-        rrid: context.awsRequestId
+      const ctx = {}
+
+      if (context && context.awsRequestId) {
+        ctx['rrid'] = context.awsRequestId
       }
 
       if (!ctx['x-correlation-id']) {
