@@ -22,7 +22,8 @@ describe('global-request-context plugin', () => {
 
     global.CONTEXT.should.deep.equal({
       'User-Agent': 'mocha-test',
-      'rrid': 'sample-request-id-hash',
+      'awsRequestId': 'sample-request-id-hash',
+      'x-rrid': 'sample-request-id-hash',
       'x-correlation-id': 'sample-request-id-hash',
       'x-correlation-test': 'hello-world'
     })
@@ -39,7 +40,8 @@ describe('global-request-context plugin', () => {
     plugin.setGlobalContext()(req, res, data, context)
 
     global.CONTEXT.should.deep.equal({
-      'rrid': 'sample-request-id-hash',
+      'awsRequestId': 'sample-request-id-hash',
+      'x-rrid': 'sample-request-id-hash',
       'x-correlation-id': 'sample-request-id-hash'
     })
   })
@@ -59,7 +61,8 @@ describe('global-request-context plugin', () => {
     plugin.setGlobalContext()(req, res, data, context)
 
     global.CONTEXT.should.deep.equal({
-      'rrid': 'sample-request-id-hash',
+      'awsRequestId': 'sample-request-id-hash',
+      'x-rrid': 'sample-request-id-hash',
       'x-correlation-id': 'sample-request-id-hash',
       'Debug-Log-Enabled': 'true'
     })

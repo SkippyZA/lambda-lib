@@ -14,11 +14,7 @@ export default class GlobalRequestContext extends AbstractLambdaPlugin {
       const ctx = {}
 
       if (context && context.awsRequestId) {
-        ctx['rrid'] = context.awsRequestId
-      }
-
-      if (!ctx['x-correlation-id']) {
-        ctx['x-correlation-id'] = ctx.rrid
+        ctx['awsRequestId'] = context.awsRequestId
       }
 
       // api-gateway headers. currently i am just setting these from
@@ -31,6 +27,10 @@ export default class GlobalRequestContext extends AbstractLambdaPlugin {
           }
         }
 
+        if (req.headers['x-rrid']) {
+          ctx['x-rrid'] = req.headers['x-rrid']
+        }
+
         if (req.headers['User-Agent']) {
           ctx['User-Agent'] = req.headers['User-Agent']
         }
@@ -38,6 +38,14 @@ export default class GlobalRequestContext extends AbstractLambdaPlugin {
         if (req.headers['Debug-Log-Enabled'] === 'true') {
           ctx['Debug-Log-Enabled'] = 'true'
         }
+      }
+
+      if (!ctx['x-correlation-id']) {
+        ctx['x-correlation-id'] = ctx.awsRequestId
+      }
+
+      if (!ctx['x-rrid']) {
+        ctx['x-rrid'] = ctx['x-correlation-id'] || ctx['awsRequestId']
       }
 
       global.CONTEXT = ctx
