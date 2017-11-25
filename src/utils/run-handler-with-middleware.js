@@ -51,7 +51,7 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
         err => {
           runError(err)
           runFinally()
-          callback(err, responseObject, callback)
+          cb(err, responseObject, callback)
         }
       )
   }
