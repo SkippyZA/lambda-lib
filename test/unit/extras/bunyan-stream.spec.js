@@ -92,5 +92,13 @@ describe('bunyan stream', () => {
       expect(process.stdout.write.calledOnce).to.be.true()
       expect(process.stdout.write.calledWith(expectedLogString)).to.be.true()
     })
+
+    it('should not print anything if a non-object is passed to the writer', () => {
+      const logString = 'something thats not an object'
+      const stream = new BunyanStream()
+      stream.write(logString)
+
+      expect(process.stdout.write.notCalled).to.be.true()
+    })
   })
 })
