@@ -1,7 +1,7 @@
 import AxiosInterceptor from './axios-interceptor'
-import BunyanSerializer from './bunyan-serializer'
+import BunyanStream from './bunyan-stream'
 
 export default {
   AxiosInterceptor,
-  BunyanSerializer
+  BunyanStream
 }
