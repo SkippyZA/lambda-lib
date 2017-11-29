@@ -1,6 +1,7 @@
 import AbstractLambdaPlugin from './abstract-lambda-plugin'
 import PluginHook from '../enums/hooks'
 import LambdaType from '../enums/lambda-type'
+import safeJson from '../utils/safe-json'
 
 export default class ApplyApiGatewayBody extends AbstractLambdaPlugin {
   constructor () {
@@ -11,7 +12,7 @@ export default class ApplyApiGatewayBody extends AbstractLambdaPlugin {
 
   applyBody () {
     return (req, res, data) => {
-      res.body = data
+      res.body = safeJson(data)
     }
   }
 }
