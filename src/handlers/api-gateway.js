@@ -6,12 +6,14 @@ import StatusCodePlugin from '../plugins/status-code'
 import StringifyBodyPlugin from '../plugins/stringify-body'
 import ErrorStatusCodeMap from '../plugins/error-status-code-map'
 import GlobalRequestContext from '../plugins/global-request-context'
+import ParseBodyToJson from '../plugins/parse-body-to-json'
 
 class ApiGatewayHandler extends AbstractHandler {
   constructor () {
     const supportedPlugins = [ LambdaType.API_GATEWAY, LambdaType.GENERIC ]
     const responseObject = { statusCode: 200, headers: {}, body: '' }
     const plugins = [
+      new ParseBodyToJson(),
       new GlobalRequestContext(),
       new ApplyApiGatewayBody(),
       new CorsPlugin(),
