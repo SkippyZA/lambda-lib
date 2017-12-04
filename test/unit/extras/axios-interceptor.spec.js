@@ -51,6 +51,6 @@ describe('axios interceptor', () => {
 
     const patchedConfig = AxiosInterceptor(config)
 
-    patchedConfig.should.deep.equal(config)
+    patchedConfig.headers['x-correlation-test'].should.equal('request')
   })
 })
