@@ -17,11 +17,20 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
     const fn = errorResponseFn || this._defaultErrorResponse || null
 
     return (req, res, error) => {
-      if (fn === null) {
-        return
+      let errorBody
+
+      if (fn !== null) {
+        errorBody = fn(error)
+      } else {
+        errorBody = JSON.stringify({
+          error: {
+            message: error.message,
+            ...(error || {}),
+            _stackTrace: error.stack.split('\n').map(x => x.trim())
+          }
+        })
       }
 
-      const errorBody = fn(error)
       res.body = JSON.stringify(errorBody)
     }
   }
