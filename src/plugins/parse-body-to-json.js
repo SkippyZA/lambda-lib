@@ -5,7 +5,7 @@ import safeJson from '../utils/safe-json'
 
 export default class ParseBodyToJson extends AbstractLambdaPlugin {
   constructor () {
-    super('parseBodyToJson', LambdaType.DEFAULT)
+    super('parseBodyToJson', LambdaType.API_GATEWAY)
 
     this.addHook(PluginHook.PRE_EXECUTE, this.processRequestBody.bind(this))
   }
