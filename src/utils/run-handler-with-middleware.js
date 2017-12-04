@@ -40,7 +40,7 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
     // Execute the middleware stack using the above request and response
     return Promise.resolve()
       // Pre-execute plugins
-      .then(() => runPreExecute())
+      .then(() => runPreExecute(event))
       // Execute actual handler function
       .then(() => fn.call(this, event))
       // Execute post-execute plugins after the handler has been executed
