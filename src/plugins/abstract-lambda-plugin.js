@@ -7,7 +7,7 @@ class AbstractLambdaPlugin {
   /**
    * AbstractLambdaPlugin constructor.
    *
-   * @params {string} name plugin name
+   * @param {string} name plugin name
    * @param {string|string[]} supported lambda types
    */
   constructor (name, supportedLambdaTypes = null) {
@@ -28,8 +28,8 @@ class AbstractLambdaPlugin {
   /**
    * Add hook for plugin.
    *
-   * @params {string} hook plugin hook
-   * @params {function} plugin function
+   * @param {string} hook plugin hook
+   * @param {function} plugin function
    */
   addHook (hook, fn) {
     if (!this.hooks[hook]) {
