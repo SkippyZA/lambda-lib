@@ -105,7 +105,6 @@ vary: accept-encoding
 {
   "test": "This is the error response body for all errors",
   "error": "I am a reference error"
-  }
 }
 ```
 
