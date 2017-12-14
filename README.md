@@ -80,9 +80,10 @@ vary: accept-encoding
 ## Specifying a custom error response
 
 ```javascript
+import { Plugins } from 'lambda-lib'
 
 // Registering a custom error response plugin. This is applied globally.
-ApiGateway.registerPlugin(new ErrorResponsePlugin(err => {
+ApiGateway.registerPlugin(new Plugins.ErrorResponse(err => {
   return {
     test: 'This is the error response body for all errors',
     error: err.message
@@ -104,7 +105,6 @@ vary: accept-encoding
 {
   "test": "This is the error response body for all errors",
   "error": "I am a reference error"
-  }
 }
 ```
 
