@@ -1,15 +1,6 @@
 import LambdaType from '../enums/lambda-type'
 import AbstractHandler from './abstract-handler'
-import ApplyApiGatewayBody from '../plugins/apply-api-gateway-body'
-import CorsPlugin from '../plugins/cors'
-import StatusCodePlugin from '../plugins/status-code'
-import StringifyBodyPlugin from '../plugins/stringify-body'
-import ErrorStatusCodeMap from '../plugins/error-status-code-map'
-import GlobalRequestContext from '../plugins/global-request-context'
-import ParseBodyToJson from '../plugins/parse-body-to-json'
-import ErrorResponse from '../plugins/error-response'
-
-import defaultErrorResponse from '../utils/default-error-response'
+import Plugins from '../plugins'
 
 class ApiGatewayHandler extends AbstractHandler {
   constructor () {
@@ -17,14 +8,14 @@ class ApiGatewayHandler extends AbstractHandler {
     const responseObject = { statusCode: 200, headers: {}, body: '' }
 
     const plugins = [
-      new ParseBodyToJson(),
-      new GlobalRequestContext(),
-      new ApplyApiGatewayBody(),
-      new CorsPlugin(),
-      new StatusCodePlugin(),
-      new StringifyBodyPlugin(),
-      new ErrorStatusCodeMap(),
-      new ErrorResponse(defaultErrorResponse)
+      new Plugins.ParseBodyToJson(),
+      new Plugins.GlobalRequestContext(),
+      new Plugins.ApplyApiGatewayBody(),
+      new Plugins.Cors(),
+      new Plugins.StatusCode(),
+      new Plugins.StringifyBody(),
+      new Plugins.ErrorStatusCodeMap(),
+      new Plugins.ErrorResponse()
     ]
 
     super(plugins, responseObject, supportedPlugins)

@@ -22,13 +22,14 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
       if (fn !== null) {
         errorBody = fn(error)
       } else {
-        errorBody = JSON.stringify({
+        const errorObj = error || {}
+        errorBody = {
           error: {
             message: error.message,
-            ...(error || {}),
+            ...errorObj,
             _stackTrace: error.stack.split('\n').map(x => x.trim())
           }
-        })
+        }
       }
 
       res.body = JSON.stringify(errorBody)

@@ -6,7 +6,8 @@ import ErrorStatusCodeMap from './error-status-code-map'
 import StatusCode from './status-code'
 import StringifyBody from './stringify-body'
 import GlobalRequestContext from './global-request-context'
+import ParseBodyToJson from './parse-body-to-json'
 
 export default {
-  ApplyApiGatewayBody, ApplyBody, Cors, ErrorResponse, ErrorStatusCodeMap, StatusCode, StringifyBody, GlobalRequestContext
+  ApplyApiGatewayBody, ApplyBody, Cors, ErrorResponse, ErrorStatusCodeMap, StatusCode, StringifyBody, GlobalRequestContext, ParseBodyToJson
 }
