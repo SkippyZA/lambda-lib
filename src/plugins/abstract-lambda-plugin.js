@@ -8,7 +8,7 @@ class AbstractLambdaPlugin {
    * AbstractLambdaPlugin constructor.
    *
    * @param {string} name plugin name
-   * @param {string|string[]} supported lambda types
+   * @param {string|string[]} supportedLambdaTypes lambda types
    */
   constructor (name, supportedLambdaTypes = null) {
     this.name = name

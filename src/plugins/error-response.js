@@ -23,9 +23,12 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
         errorBody = fn(error)
       } else {
         const errorObj = error || {}
+        const errorType = error && error.constructor && error.constructor.name
+
         errorBody = {
           error: {
             message: error.message || 'Unknown error. No error specified',
+            type: errorType || 'Unknown',
             ...errorObj,
             _stackTrace: (error.stack || '').split('\n').map(x => x.trim())
           }
