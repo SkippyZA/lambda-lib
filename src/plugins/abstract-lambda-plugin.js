@@ -54,7 +54,7 @@ class AbstractLambdaPlugin {
    *
    * @returns {LambdaType[]} list of LambdaType
    */
-  getSupportedType () {
+  getSupportedTypes () {
     return this.supportedLambdaTypes
   }
 }
