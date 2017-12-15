@@ -2,7 +2,31 @@ import LambdaType from '../enums/lambda-type'
 import AbstractHandler from './abstract-handler'
 import Plugins from '../plugins'
 
+/**
+ * Api gateway response object
+ *
+ * @typedef {Object} ApiGatewayResponse
+ * @type {object}
+ * @property {object} headers http headers
+ * @property {string} body response body as a JSON string
+ * @property {number} statusCode status code
+ */
+
+/**
+ * AWS Lambda callback
+ *
+ * @callback awsLambdaCallback
+ * @param {Error} error thrown error
+ * @param {Object} response response data
+ */
+
+/**
+ * Api gateway handler decorator.
+ */
 class ApiGatewayHandler extends AbstractHandler {
+  /**
+   * ApiGatewayHandler constructor
+   */
   constructor () {
     const supportedPlugins = [ LambdaType.API_GATEWAY, LambdaType.GENERIC ]
     const responseObject = { statusCode: 200, headers: {}, body: '' }
@@ -21,6 +45,16 @@ class ApiGatewayHandler extends AbstractHandler {
     super(plugins, responseObject, supportedPlugins)
   }
 
+  /**
+   * Overloading of _callbackHandler to force the response to always be successful, instead
+   * of having the error being passed back to the actual lambda callback. The error is being
+   * ignore here because `res` should contain the correct response body needed for Api Gateway
+   * to render a response
+   *
+   * @param {Error} ignoredError error object
+   * @param {ApiGatewayResponse} res gateway response object
+   * @param {awsLambdaCallback} cb aws lambda callback
+   */
   _callbackHandler (ignoredError, res, cb) {
     cb(null, res)
   }
