@@ -36,7 +36,7 @@ export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
    * set the api-gateway response status code to. If no mapping found, default to a 500 response
    * code.
    *
-   * @param {ErrorStatusCode[]=} statusMap list of errors and their http status codes
+   * @param {ErrorStatusCode[]=} errorMap list of errors and their http status codes
    */
   errorMapper (errorMap) {
     errorMap = errorMap || []
