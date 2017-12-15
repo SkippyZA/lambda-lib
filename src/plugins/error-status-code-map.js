@@ -3,6 +3,14 @@ import PluginHook from '../enums/hooks'
 import LambdaType from '../enums/lambda-type'
 
 /**
+ * Error status code map definition.
+ *
+ * @typedef {Object} ErrorStatusCode
+ * @property {Error} error Error type
+ * @property {number} status status code
+ */
+
+/**
  * Error status code map.
  *
  * Map an error thrown to an appropariate HTTP status code for ApiGateway
@@ -11,7 +19,7 @@ export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
   /**
    * Error status code map constructor.
    *
-   * @param {object[]} statusMap list of errors and their http status codes
+   * @param {ErrorStatusCode[]} statusMap list of errors and their http status codes
    */
   constructor (statusMap = []) {
     super('errorMap', LambdaType.API_GATEWAY)
@@ -27,7 +35,7 @@ export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
    * set the api-gateway response status code to. If no mapping found, default to a 500 response
    * code.
    *
-   * @param {object[]} statusMap list of errors and their http status codes
+   * @param {ErrorStatusCode[]} statusMap list of errors and their http status codes
    */
   errorMapper (errorMap) {
     errorMap = errorMap || []
