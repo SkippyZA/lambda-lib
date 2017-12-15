@@ -17,9 +17,9 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
   /**
    * ErrorResponse constructor.
    *
-   * @param {errorMapperCallback} defaultErrorResponse default error response fn
+   * @param {errorMapperCallback=} defaultErrorResponse default error response fn
    */
-  constructor (defaultErrorResponse) {
+  constructor (defaultErrorResponse = null) {
     super('errorResponse', LambdaType.API_GATEWAY)
     this._defaultErrorResponse = defaultErrorResponse
 
@@ -29,9 +29,9 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
   /**
    * Map error to a custom body
    *
-   * @param {errorMapperCallback} errorResponseFn error response fn
+   * @param {errorMapperCallback=} errorResponseFn error response fn
    */
-  mapErrorResponse (errorResponseFn) {
+  mapErrorResponse (errorResponseFn = null) {
     const fn = errorResponseFn || this._defaultErrorResponse || null
 
     return (req, res, error) => {
