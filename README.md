@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/SkippyZA/lambda-lib.svg?branch=master)](https://travis-ci.org/SkippyZA/lambda-lib)
-[![License](https://img.shields.io/github/license/SkippyZA/lambda-lib.svg)](./blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/SkippyZA/lambda-lib.svg)](./LICENSE)
 [![NPM](https://img.shields.io/npm/v/lambda-lib.svg)](http://npmjs.com/package/lambda-lib)
 
 # AWS Lambda Lib
