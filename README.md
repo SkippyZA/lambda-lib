@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/SkippyZA/lambda-lib.svg?branch=master)](https://travis-ci.org/SkippyZA/lambda-lib)
 [![License](https://img.shields.io/github/license/SkippyZA/lambda-lib.svg)](./LICENSE)
 [![NPM](https://img.shields.io/npm/v/lambda-lib.svg)](http://npmjs.com/package/lambda-lib)
+[![codecov](https://codecov.io/gh/SkippyZA/lambda-lib/branch/master/graph/badge.svg)](https://codecov.io/gh/SkippyZA/lambda-lib)
 
 # AWS Lambda Lib
 
