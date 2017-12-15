@@ -6,6 +6,7 @@ import LambdaType from '../enums/lambda-type'
  * Error status code map definition.
  *
  * @typedef {Object} ErrorStatusCode
+ * @type {object}
  * @property {Error} error Error type
  * @property {number} status status code
  */
@@ -19,7 +20,7 @@ export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
   /**
    * Error status code map constructor.
    *
-   * @param {ErrorStatusCode[]} statusMap list of errors and their http status codes
+   * @param {ErrorStatusCode[]=} statusMap list of errors and their http status codes
    */
   constructor (statusMap = []) {
     super('errorMap', LambdaType.API_GATEWAY)
