@@ -36,4 +36,9 @@ describe('error-status-code map', () => {
       expect(res.statusCode).to.equal(500)
     })
   })
+
+  describe('when supplied with a global error status code map', () => {
+    it('should make use of the global status codes if no local map supplied')
+    it('should favour the local mapping status code instead of the global map when errors clash')
+  })
 })
