@@ -13,14 +13,6 @@ import Plugins from '../plugins'
  */
 
 /**
- * AWS Lambda callback
- *
- * @callback awsLambdaCallback
- * @param {Error} error thrown error
- * @param {Object} response response data
- */
-
-/**
  * Api gateway handler decorator.
  */
 class ApiGatewayHandler extends AbstractHandler {
