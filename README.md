@@ -12,6 +12,17 @@ and eliminate boilerplate code
 ```javascript
 import { HandlerController, ApiGateway } from 'lambda-lib'
 
+const errorMap = [
+  {
+    error: ReferenceError,
+    status: 400
+  },
+  {
+    error: Error,
+    status: 404
+  }
+]
+
 @HandlerController
 class SampleLambdaHandler {
   @ApiGateway({ statusCode: 200, cors: true })
@@ -19,7 +30,7 @@ class SampleLambdaHandler {
     return Promise.resolve({ hello: world })
   }
 
-  @ApiGateway({ statusCode: 200, errorMap: { ReferenceError: 400, Error: 404 } })
+  @ApiGateway({ statusCode: 200, errorMap: errorMap })
   failedHandler (event) {
     return Promise.reject(new ReferenceError('I am a reference error'))
   }
@@ -66,13 +77,14 @@ vary: accept-encoding
 
 {
   "error": {
+    "message": "I am a reference error",
+    "name": "ReferenceError",
     "_stackTrace": [
       "ReferenceError: I am a reference error",
       "at SampleLambdaHandler.failedHandler (/.../src/resources/example/index.js:223:15)",
       "at /.../node_modules/lambda-lib/lib/api-gateway.js:93:19",
       "at process._tickDomainCallback (internal/process/next_tick.js:135:7)"
-    ],
-    "message": "I am a reference error"
+    ]
   }
 }
 ```
