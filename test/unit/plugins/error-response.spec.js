@@ -67,4 +67,43 @@ describe('error-response plugin', () => {
     invokeFn2.should.equal(1)
     res.body.should.be.equal('{"hello":"world"}')
   })
+
+  describe('when no mapper is supplied', () => {
+    it('should use the included format', () => {
+      const errorResponsePlugin = new ErrorResponsePlugin()
+      const plugin = errorResponsePlugin.mapErrorResponse()
+
+      const req = {}
+      const res = { body: '' }
+
+      plugin(req, res, new Error('Test error message'))
+
+      const body = JSON.parse(res.body)
+
+      body.error.should.exist()
+      body.error.message.should.equal('Test error message')
+      body.error.name.should.equal('Error')
+      body.error._stackTrace.should.exist()
+      body.error._stackTrace.should.be.an.instanceOf(Array)
+    })
+
+    it('should use the default values when an invalid error is passed', () => {
+      const errorResponsePlugin = new ErrorResponsePlugin()
+      const plugin = errorResponsePlugin.mapErrorResponse()
+
+      const req = {}
+      const res = { body: '' }
+
+      plugin(req, res, { test: 'some invalid error' })
+
+      const body = JSON.parse(res.body)
+
+      body.error.should.exist()
+      body.error.message.should.equal('Unknown error. No error specified')
+      body.error.name.should.equal('Unknown')
+      body.error.test.should.equal('some invalid error')
+      body.error._stackTrace.should.exist()
+      body.error._stackTrace.should.be.an.instanceOf(Array)
+    })
+  })
 })
