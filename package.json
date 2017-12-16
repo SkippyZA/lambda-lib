@@ -20,7 +20,7 @@
     "compile": "rm -rf lib/* && babel -d lib/ src/",
     "coverage": "nyc mocha",
     "prepublish": "npm run compile",
-    "test": "npm run compile && mocha"
+    "test": "mocha"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
