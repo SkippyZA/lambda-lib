@@ -3,9 +3,11 @@ export default function composeMiddleware (middleware) {
     throw new TypeError('Middleware stack must be an array!')
   }
 
-  // for (const fn of middleware) {
-  //   if (typeof fn !== 'function') throw new TypeError('Middleware must be composed of functions!')
-  // }
+  for (const fn of middleware) {
+    if (typeof fn !== 'function') {
+      throw new TypeError('Middleware must be composed of functions!')
+    }
+  }
 
   return function () {
     const args = [].slice.call(arguments)
