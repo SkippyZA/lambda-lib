@@ -10,8 +10,9 @@ export default class ApplyBody extends AbstractLambdaPlugin {
   }
 
   applyBody () {
-    return (req, res, data) => {
+    return (req, res, data, context, done) => {
       res.data = data
+      done()
     }
   }
 }

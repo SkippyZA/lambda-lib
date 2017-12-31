@@ -13,8 +13,9 @@ export default class StringifyBody extends AbstractLambdaPlugin {
    * Stringify the response body
    */
   stringifyBody (statusCode) {
-    return (req, res, error) => {
+    return (req, res, error, context, done) => {
       res.body = JSON.stringify(res.body)
+      done()
     }
   }
 }

@@ -13,8 +13,9 @@ export default class StatusCode extends AbstractLambdaPlugin {
    * Apply the status code supplied if the fn response is successful.
    */
   statusCodePlugin (statusCode) {
-    return (req, res, error) => {
+    return (req, res, error, context, done) => {
       res.statusCode = statusCode || res.statusCode
+      done()
     }
   }
 }

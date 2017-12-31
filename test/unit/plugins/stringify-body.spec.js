@@ -6,7 +6,7 @@ describe('stringify-body plugin', () => {
     should()
   })
 
-  it('should convert a response body from an object to a valid JSON string', () => {
+  it('should convert a response body from an object to a valid JSON string', (done) => {
     const stringifyBodyPlugin = new StringifyBodyPlugin()
     const plugin = stringifyBodyPlugin.stringifyBody()
 
@@ -15,13 +15,14 @@ describe('stringify-body plugin', () => {
       body: { hello: 'world' }
     }
 
-    plugin(req, res)
-
-    res.body.should.be.a('string')
-    res.body.should.equal('{"hello":"world"}')
+    plugin(req, res, null, null, () => {
+      res.body.should.be.a('string')
+      res.body.should.equal('{"hello":"world"}')
+      done()
+    })
   })
 
-  it('should JSONify a string body', () => {
+  it('should JSONify a string body', (done) => {
     const stringifyBodyPlugin = new StringifyBodyPlugin()
     const plugin = stringifyBodyPlugin.stringifyBody()
 
@@ -30,9 +31,10 @@ describe('stringify-body plugin', () => {
       body: 'test body string'
     }
 
-    plugin(req, res)
-
-    res.body.should.be.a('string')
-    res.body.should.equal('"test body string"')
+    plugin(req, res, null, null, () => {
+      res.body.should.be.a('string')
+      res.body.should.equal('"test body string"')
+      done()
+    })
   })
 })

@@ -34,17 +34,23 @@ describe('error-status-code map', () => {
       mapFn = errorStatusCodeMap.errorMapper(SAMPLE_ERROR_MAP)
     })
 
-    it('should correctly map the status to the response statusCode property', () => {
-      mapFn(req, res, new ReferenceError('reference error'))
-      expect(res.statusCode).to.equal(404)
+    it('should correctly map the status to the response statusCode property', (done) => {
+      mapFn(req, res, new ReferenceError('reference error'), null, () => {
+        expect(res.statusCode).to.equal(404)
 
-      mapFn(req, res, new TypeError('some error'))
-      expect(res.statusCode).to.equal(400)
+        mapFn(req, res, new TypeError('some error'), null, () => {
+          expect(res.statusCode).to.equal(400)
+
+          done()
+        })
+      })
     })
 
-    it('should set the statusCode response property to 500 if the error does not match', () => {
-      mapFn(req, res, new Error('some error'))
-      expect(res.statusCode).to.equal(500)
+    it('should set the statusCode response property to 500 if the error does not match', (done) => {
+      mapFn(req, res, new Error('some error'), null, () => {
+        expect(res.statusCode).to.equal(500)
+        done()
+      })
     })
   })
 
@@ -56,20 +62,24 @@ describe('error-status-code map', () => {
       res = {}
     })
 
-    it('should make use of the global status codes if no local map supplied', () => {
+    it('should make use of the global status codes if no local map supplied', (done) => {
       const errorStatusCodeMap = new ErrorStatusCodeMap(GLOBAL_ERROR_MAP)
       const mapFn = errorStatusCodeMap.errorMapper()
 
-      mapFn(req, res, new EvalError('eval error'))
-      expect(res.statusCode).to.equal(401)
+      mapFn(req, res, new EvalError('eval error'), null, () => {
+        expect(res.statusCode).to.equal(401)
+        done()
+      })
     })
 
-    it('should favour the local mapping status code instead of the global map when errors clash', () => {
+    it('should favour the local mapping status code instead of the global map when errors clash', (done) => {
       const errorStatusCodeMap = new ErrorStatusCodeMap(GLOBAL_ERROR_MAP)
       const mapFn = errorStatusCodeMap.errorMapper(SAMPLE_ERROR_MAP)
 
-      mapFn(req, res, new ReferenceError('reference error'))
-      expect(res.statusCode).to.equal(404)
+      mapFn(req, res, new ReferenceError('reference error'), null, () => {
+        expect(res.statusCode).to.equal(404)
+        done()
+      })
     })
   })
 })

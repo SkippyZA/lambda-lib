@@ -34,7 +34,7 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
   mapErrorResponse (errorResponseFn = null) {
     const fn = errorResponseFn || this._defaultErrorResponse || null
 
-    return (req, res, error) => {
+    return (req, res, error, context, done) => {
       let errorBody
 
       if (fn !== null) {
@@ -54,6 +54,7 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
       }
 
       res.body = JSON.stringify(errorBody)
+      done()
     }
   }
 }

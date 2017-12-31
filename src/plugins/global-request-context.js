@@ -10,7 +10,7 @@ export default class GlobalRequestContext extends AbstractLambdaPlugin {
   }
 
   setGlobalContext () {
-    return (req, res, data, context) => {
+    return (req, res, data, context, done) => {
       const ctx = {}
 
       if (context && context.awsRequestId) { ctx['awsRequestId'] = context.awsRequestId }
@@ -39,6 +39,7 @@ export default class GlobalRequestContext extends AbstractLambdaPlugin {
       }
 
       global.CONTEXT = ctx
+      done()
     }
   }
 }

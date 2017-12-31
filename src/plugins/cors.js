@@ -13,7 +13,7 @@ export default class Cors extends AbstractLambdaPlugin {
    * Add cors headers to event
    */
   corsPlugin (useCors) {
-    return (req, res, error) => {
+    return (req, res, error, context, done) => {
       if (useCors) {
         const corsHeaders = {
           'Access-Control-Allow-Origin': '*',
@@ -26,6 +26,8 @@ export default class Cors extends AbstractLambdaPlugin {
           ...res.headers
         }
       }
+
+      done()
     }
   }
 }

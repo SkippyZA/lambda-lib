@@ -11,8 +11,9 @@ export default class ParseBodyToJson extends AbstractLambdaPlugin {
   }
 
   processRequestBody () {
-    return (req, res, event, context) => {
+    return (req, res, event, context, done) => {
       event.body = safeJson(event.body)
+      done()
     }
   }
 }

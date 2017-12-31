@@ -1,3 +1,4 @@
+import composeMiddleware from './compose-middleware'
 import PluginHook from '../enums/hooks'
 
 export default function runHandlerWithMiddleware (fn, cb, responseObject, registeredPlugins = [], options = {}) {
@@ -6,18 +7,24 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
    *
    * Signature: (event, context)(hook)(data) => void
    */
-  const processPluginsForHook = (event, context) => hook => data => registeredPlugins
-    .forEach(plugin => {
-      const pluginsForHook = plugin.hooks[hook] || {}
-
-      Object.getOwnPropertyNames(pluginsForHook)
-        .forEach(pluginName => {
+  const processPluginsForHook = (event, context) => hook => data => {
+    const hookPlugins = registeredPlugins.map(p => p.hooks[hook] || {})
+      .filter(p => Object.keys(p).length > 0)
+      .map(p => Object.getOwnPropertyNames(p)
+        .map(pluginName => {
           const params = options[pluginName] || null
-          const pluginFn = pluginsForHook[pluginName](params)
-
-          pluginFn(event, responseObject, data, context)
+          return p[pluginName](params)
         })
-    })
+      )
+      .reduce((accum, plugins) => {
+        let response = [ ...accum ]
+        plugins.forEach(p => response.push(p))
+
+        return response
+      }, [])
+
+    return composeMiddleware(hookPlugins)(event, responseObject, data, context)
+  }
 
   /**
    * AWS lambda callback handler

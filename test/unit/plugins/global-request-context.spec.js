@@ -3,7 +3,7 @@ import { Plugins } from '../../../src'
 const GlobalRequestContext = Plugins.GlobalRequestContext
 
 describe('global-request-context plugin', () => {
-  it('should work with headers and request context', () => {
+  it('should work with headers and request context', (done) => {
     const plugin = new GlobalRequestContext()
 
     const res = {}
@@ -18,18 +18,20 @@ describe('global-request-context plugin', () => {
       awsRequestId: 'sample-request-id-hash'
     }
 
-    plugin.setGlobalContext()(req, res, data, context)
+    plugin.setGlobalContext()(req, res, data, context, () => {
+      global.CONTEXT.should.deep.equal({
+        'User-Agent': 'mocha-test',
+        'awsRequestId': 'sample-request-id-hash',
+        'x-rrid': 'sample-request-id-hash',
+        'x-correlation-id': 'sample-request-id-hash',
+        'x-correlation-test': 'hello-world'
+      })
 
-    global.CONTEXT.should.deep.equal({
-      'User-Agent': 'mocha-test',
-      'awsRequestId': 'sample-request-id-hash',
-      'x-rrid': 'sample-request-id-hash',
-      'x-correlation-id': 'sample-request-id-hash',
-      'x-correlation-test': 'hello-world'
+      done()
     })
   })
 
-  it('should work with empty req', () => {
+  it('should work with empty req', (done) => {
     const plugin = new GlobalRequestContext()
 
     const res = {}
@@ -37,16 +39,18 @@ describe('global-request-context plugin', () => {
     const req = {}
     const context = { awsRequestId: 'sample-request-id-hash' }
 
-    plugin.setGlobalContext()(req, res, data, context)
+    plugin.setGlobalContext()(req, res, data, context, () => {
+      global.CONTEXT.should.deep.equal({
+        'awsRequestId': 'sample-request-id-hash',
+        'x-rrid': 'sample-request-id-hash',
+        'x-correlation-id': 'sample-request-id-hash'
+      })
 
-    global.CONTEXT.should.deep.equal({
-      'awsRequestId': 'sample-request-id-hash',
-      'x-rrid': 'sample-request-id-hash',
-      'x-correlation-id': 'sample-request-id-hash'
+      done()
     })
   })
 
-  it('should set debug true if Debug-Log-Enabled === "true"', () => {
+  it('should set debug true if Debug-Log-Enabled === "true"', (done) => {
     const plugin = new GlobalRequestContext()
 
     const res = {}
@@ -58,13 +62,15 @@ describe('global-request-context plugin', () => {
     }
     const context = { awsRequestId: 'sample-request-id-hash' }
 
-    plugin.setGlobalContext()(req, res, data, context)
+    plugin.setGlobalContext()(req, res, data, context, () => {
+      global.CONTEXT.should.deep.equal({
+        'awsRequestId': 'sample-request-id-hash',
+        'x-rrid': 'sample-request-id-hash',
+        'x-correlation-id': 'sample-request-id-hash',
+        'Debug-Log-Enabled': 'true'
+      })
 
-    global.CONTEXT.should.deep.equal({
-      'awsRequestId': 'sample-request-id-hash',
-      'x-rrid': 'sample-request-id-hash',
-      'x-correlation-id': 'sample-request-id-hash',
-      'Debug-Log-Enabled': 'true'
+      done()
     })
   })
 })
