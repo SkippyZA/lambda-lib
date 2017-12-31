@@ -1,10 +1,12 @@
+const isFunction = fn => typeof fn === 'function'
+
 export default function composeMiddleware (middleware) {
   if (!Array.isArray(middleware)) {
     throw new TypeError('Middleware stack must be an array!')
   }
 
   for (const fn of middleware) {
-    if (typeof fn !== 'function') {
+    if (!isFunction(fn)) {
       throw new TypeError('Middleware must be composed of functions!')
     }
   }
@@ -28,7 +30,7 @@ export default function composeMiddleware (middleware) {
         fn = next
       }
 
-      if (!fn || typeof fn !== 'function') {
+      if (!fn || !isFunction(fn)) {
         return Promise.resolve()
       }
 
