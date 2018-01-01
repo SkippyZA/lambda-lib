@@ -1,14 +1,24 @@
+import { expect } from 'chai'
 import composeMiddleware from '../../../src/utils/compose-middleware'
 
 describe('compose middleware', () => {
   describe('with no middleware', () => {
-    it('should resolve an empty promise', () => {
+    it('should fail if a non-array supplied', () => {
+      expect(() => composeMiddleware(null)).to.throw(TypeError, 'Stack must be an array')
+    })
+
+    it('should fail if the array contains non-function values', () => {
+      const middleware = [ 'hello', 'world' ]
+      expect(() => composeMiddleware(middleware)).to.throw(TypeError, 'Middleware must be composed of functions')
+    })
+
+    it('should resolve an empty promise when supplied an empty array', () => {
       return composeMiddleware([])()
     })
   })
 
   describe('with multiple middleware applied', () => {
-    it('should workd', () => {
+    it('execute them with the supplied parameters', () => {
       let executionCount = 0
 
       const middlewareA = (req, res, done) => {
