@@ -36,6 +36,7 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
   return function (event, context, callback) {
     const processPluginsForEvent = processPluginsForHook(event, context)
 
+    const runInit = processPluginsForEvent(PluginHook.INITIALIZE)
     const runPreExecute = processPluginsForEvent(PluginHook.PRE_EXECUTE)
     const runPostExecute = processPluginsForEvent(PluginHook.POST_EXECUTE)
     const runFinally = () => {
@@ -46,6 +47,7 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
 
     // Execute the middleware stack using the above request and response
     return Promise.resolve()
+      .then(() => runInit())
       // Pre-execute plugins
       .then(() => runPreExecute(event))
       // Execute actual handler function
