@@ -39,11 +39,11 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
     const runInit = processPluginsForEvent(PluginHook.INITIALIZE)
     const runPreExecute = processPluginsForEvent(PluginHook.PRE_EXECUTE)
     const runPostExecute = processPluginsForEvent(PluginHook.POST_EXECUTE)
+    const runError = processPluginsForEvent(PluginHook.ON_ERROR)
     const runFinally = () => {
       processPluginsForEvent(PluginHook.FINALLY)
       delete global.CONTEXT
     }
-    const runError = processPluginsForEvent(PluginHook.ON_ERROR)
 
     // Execute the middleware stack using the above request and response
     return Promise.resolve()
