@@ -42,5 +42,23 @@ describe('compose middleware', () => {
           executionCount.should.equal(2)
         })
     })
+
+    it('should reject the promise if middleware throws an error', () => {
+      const middlewareA = (req, res, done) => {
+        req.should.equal('hello')
+        res.should.equal('world')
+        throw new Error('test-error')
+      }
+
+      const middleware = [ middlewareA ]
+
+      return composeMiddleware(middleware)('hello', 'world')
+        .then(() => {
+          throw new Error('Test expected to fail')
+        })
+        .catch(err => {
+          err.message.should.equal('test-error')
+        })
+    })
   })
 })

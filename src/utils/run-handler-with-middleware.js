@@ -41,8 +41,11 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
     const runPostExecute = processPluginsForEvent(PluginHook.POST_EXECUTE)
     const runError = processPluginsForEvent(PluginHook.ON_ERROR)
     const runFinally = () => {
-      processPluginsForEvent(PluginHook.FINALLY)
-      delete global.CONTEXT
+      return processPluginsForEvent(PluginHook.FINALLY)()
+        .then(res => {
+          delete global.CONTEXT
+          return res
+        })
     }
 
     // Execute the middleware stack using the above request and response
@@ -57,13 +60,15 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
       // Execute the callback
       .then(
         () => {
-          runFinally()
-          cb(null, responseObject, callback)
+          return Promise.resolve()
+            .then(() => runFinally())
+            .then(() => cb(null, responseObject, callback))
         },
         err => {
-          runError(err)
-          runFinally()
-          cb(err, responseObject, callback)
+          return Promise.resolve()
+            .then(() => runError(err))
+            .then(() => runFinally())
+            .then(() => cb(err, responseObject, callback))
         }
       )
   }
