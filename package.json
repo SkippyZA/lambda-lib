@@ -1,5 +1,5 @@
 {
-  "version": "3.0.1",
+  "version": "3.0.2",
   "name": "lambda-lib",
   "description": "Decorators and tools for AWS Lambda",
   "keywords": [
