@@ -134,6 +134,7 @@ vary: accept-encoding
 
 | Hook             | Description                                                    |
 | ---------------- | -------------------------------------------------------------- |
+| INITIALIZE       | Initialize is executed right at the beginning of the request, before any default plugins have been executed |
 | PRE_EXECUTE      | The pre execute hook is run right before the execution of handler code. |
 | POST_EXECUTE     | This hook, post execute, is run after the execution of the handler code. |
 | ON_ERROR         | When ever there is an error which results in a rejected promise, this hook is executed. |
