@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { should, expect } from 'chai'
-import { ApiGateway } from '../../../src/index.js'
+import { ApiGateway, AbstractLambdaPlugin, Enums } from '../../../src/index.js'
 
 describe('api-gateway decorator', () => {
   before(() => {
@@ -49,6 +49,40 @@ describe('api-gateway decorator', () => {
         expect(err).to.be.null
         res.statusCode.should.equal(500)
 
+        done()
+      })
+    })
+
+    it('should pass an error throw when thrown in a PRE_REQUEST middleware', (done) => {
+      class TestPlugin extends AbstractLambdaPlugin {
+        constructor () {
+          super('testPlugin', Enums.LambdaType.API_GATEWAY)
+
+          this.addHook(Enums.Hooks.PRE_EXECUTE, this.throwsError.bind(this))
+        }
+
+        throwsError () {
+          return (a, b, c, d, done) => {
+            throw new Error('plugin-error')
+          }
+        }
+      }
+
+      ApiGateway.registerPlugin(new TestPlugin())
+
+      class Test {
+        @ApiGateway()
+        testMethod (event) {
+          console.log('should not execute')
+          return { hello: 'world' }
+        }
+      }
+
+      const test = new Test()
+
+      test.testMethod({ test: 'test string' }, {}, (err, res) => {
+        expect(err).to.be.null()
+        res.statusCode.should.equal(500)
         done()
       })
     })
