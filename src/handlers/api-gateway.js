@@ -25,7 +25,6 @@ class ApiGatewayHandler extends AbstractHandler {
 
     const plugins = [
       new Plugins.ParseBodyToJson(),
-      new Plugins.GlobalRequestContext(),
       new Plugins.ApplyApiGatewayBody(),
       new Plugins.Cors(),
       new Plugins.StatusCode(),
