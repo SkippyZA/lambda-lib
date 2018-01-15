@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { should, expect } from 'chai'
-import { ApiGateway, AbstractLambdaPlugin, Enums } from '../../../src/index.js'
+import { ApiGateway, AbstractLambdaPlugin, Enums } from '../../../src'
+import SampleCloudwatchEvent from '../../support/sample-cloudwatch-event'
 
 describe('api-gateway decorator', () => {
   before(() => {
@@ -83,6 +84,24 @@ describe('api-gateway decorator', () => {
       test.testMethod({ test: 'test string' }, {}, (err, res) => {
         expect(err).to.be.null()
         res.statusCode.should.equal(500)
+        done()
+      })
+    })
+
+    it('should not execute anything if the lambda allows to be warmed and a cloudwatch schedule event invokes it', (done) => {
+      class Test {
+        @ApiGateway({ allowWarming: true })
+        testMethod (event) {
+          return Promise.resolve(event.test)
+        }
+      }
+
+      const test = new Test()
+
+      test.testMethod(SampleCloudwatchEvent, null, (err, res) => {
+        expect(err).to.be.null()
+        expect(res).to.be.null()
+
         done()
       })
     })

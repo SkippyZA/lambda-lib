@@ -1,4 +1,5 @@
 import composeMiddleware from './compose-middleware'
+import isCloudwatchTrigger from './is-cloudwatch-trigger'
 import PluginHook from '../enums/hooks'
 
 export default function runHandlerWithMiddleware (fn, cb, responseObject, registeredPlugins = [], options = {}) {
@@ -46,6 +47,12 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
           delete global.CONTEXT
           return res
         })
+    }
+
+    // Skip the invocation if we expecting the event to be a cloudwatch trigger used for
+    // warming the lambda
+    if ((options.allowWarming || false) && isCloudwatchTrigger(event)) {
+      return Promise.resolve(cb(null, null, callback))
     }
 
     // Execute the middleware stack using the above request and response
