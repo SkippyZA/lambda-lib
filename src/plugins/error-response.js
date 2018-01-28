@@ -1,3 +1,4 @@
+import CircularJSON from 'circular-json'
 import AbstractLambdaPlugin from './abstract-lambda-plugin'
 import PluginHook from '../enums/hooks'
 import LambdaType from '../enums/lambda-type'
@@ -53,7 +54,7 @@ export default class ErrorResponse extends AbstractLambdaPlugin {
         }
       }
 
-      res.body = JSON.stringify(errorBody)
+      res.body = CircularJSON.stringify(errorBody)
       done()
     }
   }

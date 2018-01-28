@@ -53,6 +53,7 @@
     ]
   },
   "dependencies": {
-    "babel-polyfill": "6.26.0"
+    "babel-polyfill": "6.26.0",
+    "circular-json": "0.5.1"
   }
 }
