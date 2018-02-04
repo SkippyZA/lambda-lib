@@ -1,3 +1,4 @@
+import ApiGatewayResponse from '../api-gateway-response'
 import LambdaType from '../enums/lambda-type'
 import AbstractHandler from './abstract-handler'
 import Plugins from '../plugins'
@@ -21,9 +22,10 @@ class ApiGatewayHandler extends AbstractHandler {
    */
   constructor () {
     const supportedPlugins = [ LambdaType.API_GATEWAY, LambdaType.GENERIC ]
-    const responseObject = { statusCode: 200, headers: {}, body: '' }
+    const responseObject = new ApiGatewayResponse({ statusCode: 200, headers: {}, body: '' })
 
     const plugins = [
+      new Plugins.ApiResponseObjectMapper(),
       new Plugins.ParseBodyToJson(),
       new Plugins.ApplyApiGatewayBody(),
       new Plugins.Cors(),
