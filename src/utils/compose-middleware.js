@@ -35,13 +35,17 @@ export default function composeMiddleware (middleware) {
       }
 
       return new Promise((resolve, reject) => {
-        fn(...args, (err) => {
-          if (err) {
-            return reject(err)
-          }
+        try {
+          fn(...args, (err) => {
+            if (err) {
+              return reject(err)
+            }
 
-          return resolve(dispatch(i + 1))
-        })
+            return resolve(dispatch(i + 1))
+          })
+        } catch (err) {
+          return reject(err)
+        }
       })
     }
 
