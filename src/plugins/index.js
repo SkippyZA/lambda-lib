@@ -6,8 +6,8 @@ import ErrorStatusCodeMap from './error-status-code-map'
 import StatusCode from './status-code'
 import StringifyBody from './stringify-body'
 import ParseBodyToJson from './parse-body-to-json'
-import ApiResponseObjectMapper from './api-response-object-mapper'
+import ApiGatewayResponseObjectMapper from './api-gateway-response-object-mapper'
 
 export default {
-  ApplyApiGatewayBody, ApplyBody, Cors, ErrorResponse, ErrorStatusCodeMap, StatusCode, StringifyBody, ParseBodyToJson, ApiResponseObjectMapper
+  ApplyApiGatewayBody, ApplyBody, Cors, ErrorResponse, ErrorStatusCodeMap, StatusCode, StringifyBody, ParseBodyToJson, ApiGatewayResponseObjectMapper
 }

@@ -25,7 +25,7 @@ class ApiGatewayHandler extends AbstractHandler {
     const responseObject = new ApiGatewayResponse({ statusCode: 200, headers: {}, body: '' })
 
     const plugins = [
-      new Plugins.ApiResponseObjectMapper(),
+      new Plugins.ApiGatewayResponseObjectMapper(),
       new Plugins.ParseBodyToJson(),
       new Plugins.ApplyApiGatewayBody(),
       new Plugins.Cors(),
