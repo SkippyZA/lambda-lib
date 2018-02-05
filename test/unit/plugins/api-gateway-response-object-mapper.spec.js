@@ -1,10 +1,9 @@
 import { expect } from 'chai'
-import { HandlerController, ApiGateway, ApiGatewayResponse } from '../../../src'
+import { ApiGateway, ApiGatewayResponse } from '../../../src'
 
 describe('The Api Gateway response object mapper plugin', () => {
   describe('when executing a handler', (done) => {
-    it('should work as normal when returning a normal response', (done) => {
-      @HandlerController
+    it('should work as normal when returning a normal response', () => {
       class TestController {
         @ApiGateway({ statusCode: 201 })
         testFn (event) {
@@ -14,9 +13,9 @@ describe('The Api Gateway response object mapper plugin', () => {
         }
       }
 
-      const handlers = new TestController().getHandlers()
+      const testController = new TestController()
 
-      handlers.testFn({}, {}, (err, res) => {
+      testController.testFn({}, {}, (err, res) => {
         expect(err).to.be.null()
 
         res.should.be.instanceOf(ApiGatewayResponse)
@@ -24,13 +23,10 @@ describe('The Api Gateway response object mapper plugin', () => {
         res.statusCode.should.equal(201)
         res.body.should.equal('{"test":"hello world"}')
         res.headers.should.deep.equal({})
-
-        done()
       })
     })
 
     describe('when returning an instance of ApiGatewayResponse', () => {
-      @HandlerController
       class TestController {
         @ApiGateway({ statusCode: 201 })
         testFn (event) {
@@ -41,10 +37,10 @@ describe('The Api Gateway response object mapper plugin', () => {
         }
       }
 
-      it('should use the status code from the returned ApiGatewayResponse', (done) => {
-        const handlers = new TestController().getHandlers()
+      it('should use the status code from the returned ApiGatewayResponse', () => {
+        const controller = new TestController()
 
-        handlers.testFn({}, {}, (err, res) => {
+        return controller.testFn({}, {}, (err, res) => {
           expect(err).to.be.null()
 
           res.should.be.instanceOf(ApiGatewayResponse)
@@ -52,8 +48,6 @@ describe('The Api Gateway response object mapper plugin', () => {
           res.statusCode.should.equal(304)
           res.body.should.equal('{"test":"hello world"}')
           res.headers.should.deep.equal({})
-
-          done()
         })
       })
     })
