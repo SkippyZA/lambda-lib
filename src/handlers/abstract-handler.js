@@ -20,7 +20,7 @@ class AbstractHandler {
    * @param {Object} responseObject base response object to be passed through plugins
    * @param {LambdaType[]} supportedPluginTypes list of types this plugin supports
    */
-  constructor (defaultPlugins = [], responseObject = {}, supportedPluginTypes = [ LambdaType.GENERIC ]) {
+  constructor (defaultPlugins = [], responseObject = {}, supportedPluginTypes = [ LambdaType.DEFAULT ]) {
     this.supportedPluginTypes = supportedPluginTypes
     this.responseObject = responseObject
     this.registeredPlugins = [
