@@ -53,6 +53,13 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
    * @param {function} callback callback function
    */
   return function (event, context, callback) {
+    // Skip the invocation if we expecting the event to be a cloudwatch trigger used for
+    // warming the lambda
+    if ((options.allowWarming || false) && isCloudwatchTrigger(event)) {
+      logger.debug('Warming invokation triggered by cloudwatch')
+      return Promise.resolve(cb(null, null, callback))
+    }
+
     logger.trace('List of registerd plugins', { plugins: registeredPlugins.map(p => p.name) })
 
     const processPluginsForEvent = processPluginsForHook(event, context)
@@ -68,12 +75,6 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
           delete global.CONTEXT
           return res
         })
-    }
-
-    // Skip the invocation if we expecting the event to be a cloudwatch trigger used for
-    // warming the lambda
-    if ((options.allowWarming || false) && isCloudwatchTrigger(event)) {
-      return Promise.resolve(cb(null, null, callback))
     }
 
     // Execute the middleware stack using the above request and response
