@@ -36,7 +36,11 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
         return { name, fn }
       })
 
-    logger.trace('Filtered plugins to process for hook', { hook, plugins: pluginsForHook.map(p => p.name) })
+    if (pluginsForHook.length > 0) {
+      logger.trace('Filtered plugins to process for hook', { hook, plugins: pluginsForHook.map(p => p.name) })
+    } else {
+      logger.trace('No plugins to process for hook', { hook })
+    }
 
     return composeMiddleware(pluginsForHook, logger)(event, responseObject, data, context)
   }
