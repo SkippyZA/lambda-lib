@@ -78,7 +78,10 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
       // Pre-execute plugins
       .then(() => runPreExecute(event))
       // Execute actual handler function
-      .then(() => fn.call(this, event))
+      .then(() => {
+        logger.trace('Executing handler function', { functionName: fn.name || 'unknown' })
+        return fn.call(this, event)
+      })
       // Execute post-execute plugins after the handler has been executed
       .then(response => runPostExecute(response))
       // Execute the callback
