@@ -1,6 +1,14 @@
 import { expect } from 'chai'
 import composeMiddleware from '../../../src/utils/compose-middleware'
 
+const noop = () => {}
+const logger = {
+  trace: noop,
+  debug: noop,
+  info: noop,
+  error: noop
+}
+
 describe('compose middleware', () => {
   describe('with no middleware', () => {
     it('should fail if a non-array supplied', () => {
@@ -9,11 +17,11 @@ describe('compose middleware', () => {
 
     it('should fail if the array contains non-function values', () => {
       const middleware = [ 'hello', 'world' ]
-      expect(() => composeMiddleware(middleware)).to.throw(TypeError, 'Middleware must be composed of functions')
+      expect(() => composeMiddleware(middleware, logger)).to.throw(TypeError, 'Middleware must be composed of functions { name, fn }')
     })
 
     it('should resolve an empty promise when supplied an empty array', () => {
-      return composeMiddleware([])()
+      return composeMiddleware([], logger)()
     })
   })
 
@@ -35,9 +43,12 @@ describe('compose middleware', () => {
         done()
       }
 
-      const middleware = [ middlewareA, middlewareB ]
+      const middleware = [
+        { name: 'testMiddlewareA', fn: middlewareA },
+        { name: 'testMiddlewareA', fn: middlewareB }
+      ]
 
-      return composeMiddleware(middleware)('hello', 'world')
+      return composeMiddleware(middleware, logger)('hello', 'world')
         .then(() => {
           executionCount.should.equal(2)
         })
@@ -50,9 +61,9 @@ describe('compose middleware', () => {
         throw new Error('test-error')
       }
 
-      const middleware = [ middlewareA ]
+      const middleware = [ { name: 'testMiddlewareA', fn: middlewareA } ]
 
-      return composeMiddleware(middleware)('hello', 'world')
+      return composeMiddleware(middleware, logger)('hello', 'world')
         .then(() => {
           throw new Error('Test expected to fail')
         })

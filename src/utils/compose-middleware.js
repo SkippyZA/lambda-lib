@@ -1,13 +1,13 @@
 const isFunction = fn => typeof fn === 'function'
 
-export default function composeMiddleware (middleware) {
+export default function composeMiddleware (middleware, logger) {
   if (!Array.isArray(middleware)) {
     throw new TypeError('Stack must be an array')
   }
 
   for (const fn of middleware) {
-    if (!isFunction(fn)) {
-      throw new TypeError('Middleware must be composed of functions')
+    if (!isFunction(fn.fn) || typeof fn.name !== 'string') {
+      throw new TypeError('Middleware must be composed of functions { name, fn }')
     }
   }
 
@@ -25,7 +25,9 @@ export default function composeMiddleware (middleware) {
 
       index = i
 
-      let fn = middleware[i]
+      let fn = (middleware[i] || {}).fn
+      let fnName = (middleware[i] || {}).name
+
       if (i === middleware.length) {
         fn = next
       }
@@ -36,6 +38,8 @@ export default function composeMiddleware (middleware) {
 
       return new Promise((resolve, reject) => {
         try {
+          logger.trace('Executing middleware function', { plugin: fnName })
+
           fn(...args, (err) => {
             if (err) {
               return reject(err)
@@ -44,6 +48,8 @@ export default function composeMiddleware (middleware) {
             return resolve(dispatch(i + 1))
           })
         } catch (err) {
+          logger.error('Error when executing middleware function', { plugin: fnName })
+
           return reject(err)
         }
       })
