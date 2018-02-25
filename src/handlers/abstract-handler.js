@@ -4,7 +4,7 @@ import runHandlerWithMiddleware from '../utils/run-handler-with-middleware'
 /**
  * AWS Lambda callback
  *
- * @callback awsLambdaCallback
+ * @callback AwsLambdaCallback
  * @param {Error} error thrown error
  * @param {Object} response response data
  */
@@ -74,7 +74,7 @@ class AbstractHandler {
    *
    * @param {Error} err error object
    * @param {Object} res response object
-   * @param {awsLambdaCallback} cb aws lambda callback
+   * @param {AwsLambdaCallback} cb aws lambda callback
    */
   _callbackHandler (err, res, cb) {
     cb(err, res)
