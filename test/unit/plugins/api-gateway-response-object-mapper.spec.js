@@ -40,7 +40,11 @@ describe('The Api Gateway response object mapper plugin', () => {
       it('should use the status code from the returned ApiGatewayResponse', () => {
         const controller = new TestController()
 
-        return controller.testFn({}, {}, (err, res) => {
+        const apiGatewayEvent = {
+          body: '{"hello":"world"}'
+        }
+
+        return controller.testFn(apiGatewayEvent, {}, (err, res) => {
           expect(err).to.be.null()
 
           res.should.be.instanceOf(ApiGatewayResponse)
