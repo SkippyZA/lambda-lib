@@ -3,28 +3,44 @@ import isCloudwatchTrigger from './is-cloudwatch-trigger'
 import PluginHook from '../enums/hooks'
 
 export default function runHandlerWithMiddleware (fn, cb, responseObject, registeredPlugins = [], options = {}) {
+  const logger = (options => {
+    if (!options.logger) {
+      const log = (level) => (msg, params = {}) => console.log(`${level.toUpperCase()} - ${msg}`, params)
+
+      return {
+        trace: log('trace'),
+        debug: log('debug'),
+        info: log('info'),
+        error: log('error')
+      }
+    }
+
+    return options.logger
+  })(options)
+
   /**
    * Run the plugins that have been bound to plugin hooks
    *
    * Signature: (event, context)(hook)(data) => void
    */
   const processPluginsForHook = (event, context) => hook => data => {
-    const hookPlugins = registeredPlugins.map(p => p.hooks[hook] || {})
-      .filter(p => Object.keys(p).length > 0)
-      .map(p => Object.getOwnPropertyNames(p)
-        .map(pluginName => {
-          const params = options[pluginName] || null
-          return p[pluginName](params)
-        })
-      )
-      .reduce((accum, plugins) => {
-        let response = [ ...accum ]
-        plugins.forEach(p => response.push(p))
+    logger.trace('Executing middleware for hook', { hook })
 
-        return response
-      }, [])
+    const pluginsForHook = registeredPlugins
+      // Filter out any plugins that dont have the appropriate hooks
+      .filter(plugin => Object.getOwnPropertyNames(plugin.hooks).find(p => p === hook))
+      // Construct the middleware object of { name, fn } with options applied
+      .map(plugin => {
+        const { name, hooks } = plugin
+        const params = options[name] || null
+        const fn = hooks[hook][name](params)
 
-    return composeMiddleware(hookPlugins)(event, responseObject, data, context)
+        return { name, fn }
+      })
+
+    logger.trace('Filtered plugins to process for hook', { hook, plugins: pluginsForHook.map(p => p.name) })
+
+    return composeMiddleware(pluginsForHook, logger)(event, responseObject, data, context)
   }
 
   /**
@@ -35,6 +51,8 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
    * @param {function} callback callback function
    */
   return function (event, context, callback) {
+    logger.trace('List of registerd plugins', { plugins: registeredPlugins.map(p => p.name) })
+
     const processPluginsForEvent = processPluginsForHook(event, context)
 
     const runInit = processPluginsForEvent(PluginHook.INITIALIZE)
@@ -44,6 +62,7 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
     const runFinally = () => {
       return processPluginsForEvent(PluginHook.FINALLY)()
         .then(res => {
+          logger.trace('Clearing global request context properties')
           delete global.CONTEXT
           return res
         })
