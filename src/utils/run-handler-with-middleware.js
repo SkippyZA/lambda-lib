@@ -24,8 +24,6 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
    * Signature: (event, context)(hook)(data) => void
    */
   const processPluginsForHook = (event, context) => hook => data => {
-    logger.trace('Executing middleware for hook', { hook })
-
     const pluginsForHook = registeredPlugins
       // Filter out any plugins that dont have the appropriate hooks
       .filter(plugin => Object.getOwnPropertyNames(plugin.hooks).find(p => p === hook))
