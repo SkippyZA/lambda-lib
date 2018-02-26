@@ -15,7 +15,7 @@ describe('The Api Gateway response object mapper plugin', () => {
 
       const testController = new TestController()
 
-      testController.testFn({}, {}, (err, res) => {
+      return testController.testFn({}, {}, (err, res) => {
         expect(err).to.be.null()
 
         res.should.be.instanceOf(ApiGatewayResponse)

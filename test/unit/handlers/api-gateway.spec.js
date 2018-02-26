@@ -10,7 +10,7 @@ describe('api-gateway decorator', () => {
   })
 
   describe('when applied to a class method', () => {
-    it('should work with no parameters', (done) => {
+    it('should work with no parameters', () => {
       class Test {
         @ApiGateway()
         testMethod (event) {
@@ -20,7 +20,7 @@ describe('api-gateway decorator', () => {
 
       const test = new Test()
 
-      test.testMethod({ test: 'test string' }, null, (err, res) => {
+      return test.testMethod({ test: 'test string' }, null, (err, res) => {
         expect(err).to.be.null
         res.should.be.an('object')
 
@@ -31,12 +31,10 @@ describe('api-gateway decorator', () => {
         res.statusCode.should.equal(200)
         res.headers.should.eql({})
         res.body.should.equal('"test string"')
-
-        done()
       })
     })
 
-    it('should return a status code of 500 for an unknown exception', (done) => {
+    it('should return a status code of 500 for an unknown exception', () => {
       class Test {
         @ApiGateway()
         testMethod (event) {
@@ -46,17 +44,15 @@ describe('api-gateway decorator', () => {
 
       const test = new Test()
 
-      test.testMethod({ test: 'test string' }, null, (err, res) => {
+      return test.testMethod({ test: 'test string' }, null, (err, res) => {
         expect(err).to.be.null
         res.statusCode.should.equal(500)
-
-        done()
       })
     })
 
     // Skipping this test as the test breaks when trying to use @ApiGateway elsewhere as
     // the test plugin is still loaded into the global context
-    it.skip('should pass an error throw when thrown in a PRE_REQUEST middleware', (done) => {
+    it.skip('should pass an error throw when thrown in a PRE_REQUEST middleware', () => {
       class TestPlugin extends AbstractLambdaPlugin {
         constructor () {
           super('testPlugin', Enums.LambdaType.API_GATEWAY)
@@ -83,14 +79,13 @@ describe('api-gateway decorator', () => {
 
       const test = new Test()
 
-      test.testMethod({ test: 'test string' }, {}, (err, res) => {
+      return test.testMethod({ test: 'test string' }, {}, (err, res) => {
         expect(err).to.be.null()
         res.statusCode.should.equal(500)
-        done()
       })
     })
 
-    it('should not execute anything if the lambda allows to be warmed and a cloudwatch schedule event invokes it', (done) => {
+    it('should not execute anything if the lambda allows to be warmed and a cloudwatch schedule event invokes it', () => {
       class Test {
         @ApiGateway({ allowWarming: true })
         testMethod (event) {
@@ -100,11 +95,9 @@ describe('api-gateway decorator', () => {
 
       const test = new Test()
 
-      test.testMethod(SampleCloudwatchEvent, null, (err, res) => {
+      return test.testMethod(SampleCloudwatchEvent, null, (err, res) => {
         expect(err).to.be.null()
         expect(res).to.be.null()
-
-        done()
       })
     })
   })

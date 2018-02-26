@@ -5,7 +5,7 @@ import PluginHook from '../enums/hooks'
 export default function runHandlerWithMiddleware (fn, cb, responseObject, registeredPlugins = [], options = {}) {
   const logger = (options => {
     if (!options.logger) {
-      const log = (level) => (msg, params = {}) => console.log(`${level.toUpperCase()} - ${msg}`, params)
+      const log = (level) => (msg, params = {}) => console.log(`${level.toUpperCase()} - ${msg}`, JSON.stringify(params))
 
       return {
         trace: log('trace'),
@@ -31,15 +31,16 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
       .map(plugin => {
         const { name, hooks } = plugin
         const params = options[name] || null
+        logger.trace('Applying options to plugin function', { name, params })
         const fn = hooks[hook][name](params)
 
         return { name, fn }
       })
 
     if (pluginsForHook.length > 0) {
-      logger.trace('Filtered plugins to process for hook', { hook, plugins: pluginsForHook.map(p => p.name) })
+      logger.debug('Filtered plugins to process for hook', { hook, plugins: pluginsForHook.map(p => p.name) })
     } else {
-      logger.trace('No plugins to process for hook', { hook })
+      logger.debug('No plugins to process for hook', { hook })
     }
 
     return composeMiddleware(pluginsForHook, logger)(event, responseObject, data, context)
@@ -56,11 +57,11 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
     // Skip the invocation if we expecting the event to be a cloudwatch trigger used for
     // warming the lambda
     if ((options.allowWarming || false) && isCloudwatchTrigger(event)) {
-      logger.debug('Warming invokation triggered by cloudwatch')
+      logger.info('Warming invokation triggered by cloudwatch')
       return Promise.resolve(cb(null, null, callback))
     }
 
-    logger.trace('List of registerd plugins', { plugins: registeredPlugins.map(p => p.name) })
+    logger.trace('Invoking lambda-lib decorator', { event, context, plugins: registeredPlugins.map(p => p.name) })
 
     const processPluginsForEvent = processPluginsForHook(event, context)
 
@@ -71,7 +72,7 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
     const runFinally = () => {
       return processPluginsForEvent(PluginHook.FINALLY)()
         .then(res => {
-          logger.trace('Clearing global request context properties')
+          logger.debug('Clearing global request context properties')
           delete global.CONTEXT
           return res
         })
@@ -84,7 +85,10 @@ export default function runHandlerWithMiddleware (fn, cb, responseObject, regist
       .then(() => runPreExecute(event))
       // Execute actual handler function
       .then(() => {
-        logger.trace('Executing handler function', { functionName: fn.name || 'unknown' })
+        const functionName = fn.name || 'unknown'
+        logger.debug('Executing handler function', { functionName })
+        logger.trace('Event provided to handler function', { functionName, event })
+
         return fn.call(this, event)
       })
       // Execute post-execute plugins after the handler has been executed

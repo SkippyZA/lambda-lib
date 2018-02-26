@@ -1,5 +1,12 @@
 const isFunction = fn => typeof fn === 'function'
 
+const argumentsToLog = args => ({
+  event: args[0],
+  responseObject: args[1],
+  data: args[2],
+  context: args[3]
+})
+
 export default function composeMiddleware (middleware, logger) {
   if (!Array.isArray(middleware)) {
     throw new TypeError('Stack must be an array')
@@ -12,11 +19,17 @@ export default function composeMiddleware (middleware, logger) {
   }
 
   return function () {
+    if (middleware.length === 0) {
+      return Promise.resolve()
+    }
+
     const args = [].slice.call(arguments)
     const next = args.slice(-1)[0]
 
     // last called middleware #
     let index = -1
+
+    logger.trace('Supplied arguments to composeMiddlware', { arguments: argumentsToLog(args) })
 
     function dispatch (i) {
       if (i <= index) {
@@ -38,7 +51,8 @@ export default function composeMiddleware (middleware, logger) {
 
       return new Promise((resolve, reject) => {
         try {
-          logger.trace('Executing middleware function', { plugin: fnName })
+          logger.debug('Executing middleware function', { plugin: fnName })
+          logger.trace('Evolution of arguments supplied to composeMiddleware', { plugin: fnName, arguments: argumentsToLog(args) })
 
           fn(...args, (err) => {
             if (err) {
