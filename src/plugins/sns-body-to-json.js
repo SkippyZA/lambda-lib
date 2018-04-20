@@ -16,6 +16,9 @@ export default class SnsBodyToJson extends AbstractLambdaPlugin {
 
       if (record.Sns && record.Sns.Message) {
         event.body = safeJson(record.Sns.Message)
+        event.snsSubject = record.Sns.Subject
+        event.snsArn = record.Sns.TopicArn
+        event.snsMessageId = record.Sns.MessageId
       }
 
       done()
