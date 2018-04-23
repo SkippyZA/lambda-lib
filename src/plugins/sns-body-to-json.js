@@ -5,7 +5,7 @@ import safeJson from '../utils/safe-json'
 
 export default class SnsBodyToJson extends AbstractLambdaPlugin {
   constructor () {
-    super('snsBodyToJson', LambdaType.DEFAULT)
+    super('snsBodyToJson', LambdaType.SNS)
 
     this.addHook(PluginHook.PRE_EXECUTE, this.processRequestBody.bind(this))
   }
@@ -16,9 +16,9 @@ export default class SnsBodyToJson extends AbstractLambdaPlugin {
 
       if (record.Sns && record.Sns.Message) {
         event.body = safeJson(record.Sns.Message)
-        event.snsSubject = record.Sns.Subject
-        event.snsArn = record.Sns.TopicArn
-        event.snsMessageId = record.Sns.MessageId
+        event.subject = record.Sns.Subject
+        event.arn = record.Sns.TopicArn
+        event.messageId = record.Sns.MessageId
       }
 
       done()
