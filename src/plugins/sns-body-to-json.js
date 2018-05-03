@@ -20,6 +20,7 @@ export default class SnsBodyToJson extends AbstractLambdaPlugin {
         event.arn = record.Sns.TopicArn
         event.messageId = record.Sns.MessageId
         event.timestamp = record.Sns.Timestamp
+        event.attributes = record.Sns.MessageAttributes
       }
 
       done()
