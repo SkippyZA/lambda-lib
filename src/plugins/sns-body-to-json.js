@@ -18,7 +18,7 @@ export default class SnsBodyToJson extends AbstractLambdaPlugin {
         return parseInt(value, 10)
       case 'String':
       default:
-        return value.toString()
+        return value
     }
   }
 
