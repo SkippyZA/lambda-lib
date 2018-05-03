@@ -25,4 +25,39 @@ describe('sns-body-to-json plugin', () => {
       done()
     })
   })
+
+  describe('#_castType', () => {
+    it('should cast Numbers correctly', () => {
+      plugin._castType('Number', '10').should.equal(10)
+    })
+
+    it('should cast StringArray correctly', () => {
+      plugin._castType('StringArray', '["soccer", "rugby"]').should.deep.equal(['soccer', 'rugby'])
+    })
+
+    it('should cast String correctly', () => {
+      plugin._castType('String', 'hello').should.equal('hello')
+    })
+  })
+
+  describe('#_parseAttributes', () => {
+    it('should unwrap and cast attributes into key/value store', () => {
+      const object = plugin._parseAttributes({
+        Test: {
+          Type: 'String',
+          Value: 'hello'
+        },
+        TestNumber: {
+          Type: 'Number',
+          Value: '1234'
+        },
+        TestArray: {
+          Type: 'StringArray',
+          Value: '["soccer", "rugby"]'
+        }
+      })
+
+      object.should.deep.equal({ Test: 'hello', TestNumber: 1234, TestArray: ['soccer', 'rugby'] })
+    })
+  })
 })
