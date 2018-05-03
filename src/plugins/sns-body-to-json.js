@@ -10,6 +10,25 @@ export default class SnsBodyToJson extends AbstractLambdaPlugin {
     this.addHook(PluginHook.PRE_EXECUTE, this.processRequestBody.bind(this))
   }
 
+  _castType (type, value) {
+    switch (type) {
+      case 'StringArray':
+        return JSON.parse(value)
+      case 'Number':
+        return parseInt(value, 10)
+      case 'String':
+      default:
+        return value.toString()
+    }
+  }
+
+  _parseAttributes (attributes) {
+    return Object.keys(attributes).reduce((carry, i) => {
+      carry[i] = this._castType(attributes[i].Type, attributes[i].Value)
+      return carry
+    }, {})
+  }
+
   processRequestBody () {
     return (req, res, event, context, done) => {
       const record = event.Records && event.Records.length && event.Records[0]
@@ -20,7 +39,7 @@ export default class SnsBodyToJson extends AbstractLambdaPlugin {
         event.arn = record.Sns.TopicArn
         event.messageId = record.Sns.MessageId
         event.timestamp = record.Sns.Timestamp
-        event.attributes = record.Sns.MessageAttributes
+        event.attributes = this._parseAttributes(record.Sns.MessageAttributes || {})
       }
 
       done()
