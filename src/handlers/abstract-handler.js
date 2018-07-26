@@ -77,7 +77,7 @@ class AbstractHandler {
    * @param {awsLambdaCallback} cb aws lambda callback
    */
   _callbackHandler (err, res, cb) {
-    cb(err, res)
+    return err ? cb(err) : cb(null, res)
   }
 }
 
