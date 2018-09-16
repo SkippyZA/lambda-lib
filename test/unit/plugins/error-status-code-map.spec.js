@@ -80,6 +80,13 @@ describe('error-status-code map', () => {
         done()
       })
     })
+
+    it('should set the statusCode response property to 500 if the error does not match', (done) => {
+      mapFn(req, res, new Error('some error'), null, () => {
+        expect(res.statusCode).to.equal(500)
+        done()
+      })
+    })
   })
 
   describe('when supplied with a global error status code map', () => {
