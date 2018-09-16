@@ -21,6 +21,10 @@ const errorMap = [
   {
     error: Error,
     status: 404
+  },
+  {
+    error: 'RateLimitError',
+    status: 420
   }
 ]
 
