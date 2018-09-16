@@ -43,7 +43,7 @@ export default class ErrorStatusCodeMap extends AbstractLambdaPlugin {
     const completeErrorMap = errorMap.concat(this._defaultStatusMap)
 
     return (req, res, error, context, done) => {
-      const err = completeErrorMap.find(e => error instanceof e.error)
+      const err = completeErrorMap.find(e => error.constructor.name === e.error || error.constructor.name === e.error.name)
 
       res.statusCode = (err && err.status) || 500
       done()

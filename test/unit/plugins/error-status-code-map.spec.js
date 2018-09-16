@@ -21,6 +21,14 @@ const SAMPLE_ERROR_MAP = [
     error: ReferenceError,
     status: 404
   }
+
+]
+
+const STRING_ERROR_MAP = [
+  {
+    error: 'RateLimitError',
+    status: 420
+  }
 ]
 
 describe('error-status-code map', () => {
@@ -49,6 +57,26 @@ describe('error-status-code map', () => {
     it('should set the statusCode response property to 500 if the error does not match', (done) => {
       mapFn(req, res, new Error('some error'), null, () => {
         expect(res.statusCode).to.equal(500)
+        done()
+      })
+    })
+  })
+
+  describe('when supplied with an error map containing strings for error identification', () => {
+    let mapFn, req, res
+
+    beforeEach(() => {
+      req = {}
+      res = {}
+      const errorStatusCodeMap = new ErrorStatusCodeMap()
+      mapFn = errorStatusCodeMap.errorMapper(STRING_ERROR_MAP)
+    })
+
+    it('should correctly map the status to the response statusCode property', (done) => {
+      class RateLimitError extends Error {}
+
+      mapFn(req, res, new RateLimitError('Enhance your calm'), null, () => {
+        expect(res.statusCode).to.equal(420)
         done()
       })
     })
