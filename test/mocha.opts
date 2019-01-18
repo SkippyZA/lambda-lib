@@ -1,4 +1,5 @@
---require babel-register
---require ./test/support/setup.js
---recursive
---reporter spec
+--require source-map-support/register
+--require ts-node/register
+--require ./test/support/setup.ts
+--recursive test/**/*.spec.ts
+--check-leaks
