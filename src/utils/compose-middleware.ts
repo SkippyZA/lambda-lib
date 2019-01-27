@@ -1,10 +1,8 @@
 import { MiddlewareFunction } from '../types/middleware'
+import { Context } from 'aws-lambda'
 
 export default function composeMiddleware (middleware: MiddlewareFunction[]) {
-  // return function (...args: any[]): Promise<any> {
-  return function (event: any, res: any, data: any, context: any, next?: any): Promise<any> {
-    // const next = args.slice(-1)[0]
-
+  return function (event: any, res: any, data: any, context: Context, next?: any): Promise<any> {
     // last called middleware #
     let index = -1
 
