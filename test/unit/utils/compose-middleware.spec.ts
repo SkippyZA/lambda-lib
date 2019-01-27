@@ -43,6 +43,7 @@ describe('Util: composeMiddleware', () => {
 
       const middleware = [ middlewareA ]
 
+      expect.fail('oops')
       try {
         await composeMiddleware(middleware)('hello', 'world', {}, {})
         expect.fail('Test expected to fail')
