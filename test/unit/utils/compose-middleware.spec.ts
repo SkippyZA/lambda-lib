@@ -1,11 +1,14 @@
 import composeMiddleware from '../../../src/utils/compose-middleware'
 import { MiddlewareFunction } from '../../../src/types/middleware'
 import { expect } from 'chai'
+import { Context } from 'aws-lambda'
+
+const mockContext: Context = {} as Context
 
 describe('Util: composeMiddleware', () => {
   describe('with no middleware', () => {
     it('should resolve an empty promise when supplied an empty array', () => {
-      return composeMiddleware([])('', '', {}, {})
+      return composeMiddleware([])('', '', {}, mockContext)
     })
   })
 
@@ -29,7 +32,7 @@ describe('Util: composeMiddleware', () => {
 
       const middleware = [ middlewareA, middlewareB ]
 
-      await composeMiddleware(middleware)('hello', 'world', {}, {})
+      await composeMiddleware(middleware)('hello', 'world', {}, mockContext)
 
       executionCount.should.equal(2)
     })
@@ -44,7 +47,7 @@ describe('Util: composeMiddleware', () => {
       const middleware = [ middlewareA ]
 
       try {
-        await composeMiddleware(middleware)('hello', 'world', {}, {})
+        await composeMiddleware(middleware)('hello', 'world', {}, mockContext)
         expect.fail('Test expected to fail')
       } catch (err) {
         err.message.should.equal('test-error')
