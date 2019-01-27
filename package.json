@@ -49,9 +49,13 @@
     "typescript": "3.2.1"
   },
   "nyc": {
-    "include": [
-      "src/**/*.js"
+    "extension": [
+      ".ts"
     ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "all": true,
     "reporter": [
       "lcov",
       "text",
