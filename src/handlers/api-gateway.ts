@@ -11,7 +11,7 @@ export function ApiGateway (value: boolean) {
     console.log(this)
     console.log('-------- descriptor value ----------------')
     console.log(descriptor.value)
-    console.log('-------- value ---------------------------')
+    console.log('-------- value parameter -----------------')
     console.log('value:', value)
     console.log('------------------------------------------')
   }
