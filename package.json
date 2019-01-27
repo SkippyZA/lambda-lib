@@ -22,7 +22,9 @@
     "coverage": "nyc mocha",
     "test": "mocha"
   },
-  "pre-commit": "test",
+  "pre-commit": [
+    "test"
+  ],
   "dependencies": {
     "circular-json": "0.5.1"
   },
@@ -37,6 +39,7 @@
     "mocha": "5.2.0",
     "nodemon": "1.18.9",
     "nyc": "13.1.0",
+    "pre-commit": "1.2.2",
     "sinon": "7.1.1",
     "sinon-chai": "3.3.0",
     "source-map-support": "0.5.9",
