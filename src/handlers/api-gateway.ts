@@ -1,4 +1,4 @@
-export function ApiGateway(value: boolean) {
+export function ApiGateway (value: boolean) {
   return function (this: any, target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     console.log()
     console.log('-------- propertyKey ---------------------')

@@ -1,6 +1,6 @@
 import { safeJson } from '../../../src/utils/safe-json'
 
-describe('safe-json utility method', () => {
+describe('Util: safe-json', () => {
   it('should return an object for a valid JSON string', () => {
     const sampleJsonString = '{"hello":"world","test":1000}'
     const obj = safeJson(sampleJsonString)

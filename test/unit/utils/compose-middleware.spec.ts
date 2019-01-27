@@ -1,0 +1,54 @@
+import composeMiddleware from '../../../src/utils/compose-middleware'
+import { MiddlewareFunction } from '../../../src/types/middleware'
+import { expect } from 'chai'
+
+describe('Util: composeMiddleware', () => {
+  describe('with no middleware', () => {
+    it('should resolve an empty promise when supplied an empty array', () => {
+      return composeMiddleware([])('', '', {}, {})
+    })
+  })
+
+  describe('with multiple middleware applied', () => {
+    it('execute them with the supplied parameters', async () => {
+      let executionCount = 0
+
+      const middlewareA: MiddlewareFunction = (req: any, res: any, event: any, context: any, done: any) => {
+        req.should.equal('hello')
+        res.should.equal('world')
+        executionCount++
+        done()
+      }
+
+      const middlewareB: MiddlewareFunction = (req: string, res: any, event: any, context: any, done: any) => {
+        req.should.equal('hello')
+        res.should.equal('world')
+        executionCount++
+        done()
+      }
+
+      const middleware = [ middlewareA, middlewareB ]
+
+      await composeMiddleware(middleware)('hello', 'world', {}, {})
+
+      executionCount.should.equal(2)
+    })
+
+    it('should reject the promise if middleware throws an error', async () => {
+      const middlewareA = (req: any, res: any) => {
+        req.should.equal('hello')
+        res.should.equal('world')
+        throw new Error('test-error')
+      }
+
+      const middleware = [ middlewareA ]
+
+      try {
+        await composeMiddleware(middleware)('hello', 'world', {}, {})
+        expect.fail('Test expected to fail')
+      } catch (err) {
+        err.message.should.equal('test-error')
+      }
+    })
+  })
+})

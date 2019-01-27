@@ -4,8 +4,8 @@ class SampleHandler {
   constructor(public name: string) {}
 
   @ApiGateway(true)
-  testHandler(): void {
-    console.log('---------- hello ' + this.name)
+  testHandler(): string {
+    return 'hello ' + this.name
   }
 }
 
@@ -14,8 +14,7 @@ describe('ApiGateway decorator', () => {
     const skippy = new SampleHandler('skippy')
     const bla = new SampleHandler('bla')
 
-    skippy.testHandler()
-    bla.testHandler()
+    skippy.testHandler().should.equal('hello skippy')
+    bla.testHandler().should.equal('hello bla')
   })
-
 })

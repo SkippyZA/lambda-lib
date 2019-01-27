@@ -2,7 +2,7 @@ import { isCloudwatchTrigger } from '../../../src/utils/is-cloudwatch-trigger'
 
 const sampleCloudwatchEvent = require('../../support/sample-cloudwatch-event.json')
 
-describe('isCloudwatchTrigger', () => {
+describe('Util: isCloudwatchTrigger', () => {
   it('should return true for a cloudwatch event', () => {
     isCloudwatchTrigger(sampleCloudwatchEvent).should.be.true
   })
